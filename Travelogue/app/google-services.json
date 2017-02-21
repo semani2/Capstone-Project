@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "936779219736",
+    "firebase_url": "https://travelogue-67fe3.firebaseio.com",
+    "project_id": "travelogue-67fe3",
+    "storage_bucket": "travelogue-67fe3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936779219736:android:db593e90c0e9c9bc",
+        "android_client_info": {
+          "package_name": "sai.developement.travelogue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936779219736-vlkfs3vpgskc5c9qbjnj2f0m8ihbt10h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sai.developement.travelogue",
+            "certificate_hash": "06afaed8cd79c3a353bf7410aa8c76c8a606877e"
+          }
+        },
+        {
+          "client_id": "936779219736-mu159neb82ba8qd70ndosrpc4k4spqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASVsKkoLLyaQmr8lmqItx6Go7ucrp9oBk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936779219736-mu159neb82ba8qd70ndosrpc4k4spqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
