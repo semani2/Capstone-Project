@@ -1,4 +1,4 @@
-package sai.developement.travelogue;
+package sai.developement.travelogue.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
+
+import sai.developement.travelogue.R;
 
 public class HomeActivity extends AppCompatActivity {
 

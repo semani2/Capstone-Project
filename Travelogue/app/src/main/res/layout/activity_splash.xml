@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="160dp"
-    tools:context="sai.developement.travelogue.SplashActivity"
+    tools:context="sai.developement.travelogue.activities.SplashActivity"
     android:background="@color/colorPrimary">
 
     <FrameLayout

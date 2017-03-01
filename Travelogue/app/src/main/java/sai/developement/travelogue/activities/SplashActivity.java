@@ -1,9 +1,11 @@
-package sai.developement.travelogue;
+package sai.developement.travelogue.activities;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import sai.developement.travelogue.R;
 
 public class SplashActivity extends AppCompatActivity {
 
