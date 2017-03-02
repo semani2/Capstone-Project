@@ -44,6 +44,9 @@ dependencies {
     //EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
 
+    //Calendar control
+    compile 'com.github.sundeepk:compact-calendar-view:2.0.0'
+
     testCompile 'junit:junit:4.12'
 }
 

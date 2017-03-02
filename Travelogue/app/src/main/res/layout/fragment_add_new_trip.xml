@@ -4,78 +4,121 @@
     android:layout_height="match_parent"
     tools:context="sai.developement.travelogue.fragments.AddNewTripFragment">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/wohoo_text_view"
-            android:text="@string/str_wohoo"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:textStyle="normal"
-            android:textSize="30sp"
-            android:textColor="@color/text_primary"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/title_text_view"
-            android:layout_below="@+id/wohoo_text_view"
-            android:text="@string/str_next_trip_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:textStyle="normal"
-            android:textSize="25sp"
-            android:textColor="@color/text_secondary"/>
-
-        <android.support.design.widget.TextInputLayout
+        android:layout_height="match_parent">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/trip_name_text_input_layout"
-            android:layout_below="@+id/title_text_view"
-            android:layout_marginTop="10dp">
-            <android.support.design.widget.TextInputEditText
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/wohoo_text_view"
+                android:text="@string/str_wohoo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:textStyle="normal"
+                android:textSize="30sp"
+                android:textColor="@color/text_primary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title_text_view"
+                android:layout_below="@+id/wohoo_text_view"
+                android:text="@string/str_next_trip_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:textStyle="normal"
+                android:textSize="25sp"
+                android:textColor="@color/text_secondary"/>
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/trip_name_text_edit_text"
-                android:freezesText="true"
-                android:hint="@string/str_trip_name" />
-        </android.support.design.widget.TextInputLayout>
+                android:id="@+id/trip_name_text_input_layout"
+                android:layout_below="@+id/title_text_view"
+                android:layout_marginTop="10dp">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/trip_name_text_edit_text"
+                    android:freezesText="true"
+                    android:hint="@string/str_trip_name" />
+            </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/date_picker_layout"
-            android:orientation="horizontal"
-            android:layout_below="@id/trip_name_text_input_layout"
-            android:weightSum="1"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputEditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/start_date_edit_text"
-                android:freezesText="true"
-                android:hint="@string/str_trip_from"
-                android:layout_weight="0.5"
-                android:focusable="false"/>
+                android:id="@+id/date_picker_layout"
+                android:orientation="horizontal"
+                android:layout_below="@id/trip_name_text_input_layout"
+                android:weightSum="1"
+                android:layout_marginTop="10dp">
 
-            <android.support.design.widget.TextInputEditText
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/start_date_edit_text"
+                    android:freezesText="true"
+                    android:hint="@string/str_trip_from"
+                    android:layout_weight="0.5"
+                    android:focusable="false"/>
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/end_date_edit_text"
+                    android:freezesText="true"
+                    android:hint="@string/str_trip_to"
+                    android:layout_weight="0.5"
+                    android:focusable="false"/>
+
+            </LinearLayout>
+            
+            
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/end_date_edit_text"
-                android:freezesText="true"
-                android:hint="@string/str_trip_to"
-                android:layout_weight="0.5"
-                android:focusable="false"/>
+                android:layout_height="60dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorPrimary"
+                android:layout_below="@+id/date_picker_layout"
+                android:id="@+id/month_layout"
+                android:visibility="gone">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/month_text_view"
+                        android:textColor="#fff"
+                        android:textSize="25sp"
+                        android:padding="5dp"
+                        android:layout_gravity="center_vertical"/>
+            </LinearLayout>
 
-        </LinearLayout>
+            <com.github.sundeepk.compactcalendarview.CompactCalendarView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/compactcalendar_view"
+                android:layout_width="fill_parent"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_height="250dp"
+                android:layout_below="@+id/month_layout"
+                app:compactCalendarTargetHeight="250dp"
+                app:compactCalendarTextSize="12sp"
+                app:compactCalendarBackgroundColor="@color/colorPrimary"
+                app:compactCalendarTextColor="#fff"
+                app:compactCalendarCurrentSelectedDayBackgroundColor="#E53935"
+                app:compactCalendarCurrentDayBackgroundColor="@color/colorPrimaryDark"
+                app:compactCalendarMultiEventIndicatorColor="#fff"
+                />
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
 
 </FrameLayout>
