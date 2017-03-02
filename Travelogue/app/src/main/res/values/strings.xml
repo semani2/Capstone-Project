@@ -3,6 +3,10 @@
 
     <string name="str_logout">Logout</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Add New Trip fragment strings -->
+    <string name="str_wohoo" translatable="false">Woo-hoo!</string>
+    <string name="str_next_trip_title">Let\'s plan your next big trip</string>
+    <string name="str_trip_name">Trip name</string>
+    <string name="str_trip_from">From</string>
+    <string name="str_trip_to">To</string>
 </resources>
