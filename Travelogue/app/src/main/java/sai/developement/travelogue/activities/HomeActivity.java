@@ -64,7 +64,9 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Fab Clicked!", Toast.LENGTH_SHORT).show();
+                 // Launch New Trip activity to create a new trip
+                Intent newTripIntent = new Intent(HomeActivity.this, NewTripActivity.class);
+                startActivity(newTripIntent);
             }
         });
     }
