@@ -5,27 +5,43 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.orhanobut.logger.Logger;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.adapters.TripMatesListAdapter;
+import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
+import sai.developement.travelogue.models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,17 +60,32 @@ public class AddNewTripFragment extends Fragment {
     @BindView(R.id.end_date_edit_text)
     TextInputEditText endDateEditText;
 
-    @BindView(R.id.compactcalendar_view)
-    CompactCalendarView compactCalendarView;
+    @BindView(R.id.add_users_layout)
+    LinearLayout addUsersLayout;
 
-    @BindView(R.id.month_layout)
-    LinearLayout monthLayout;
+    @BindView(R.id.trip_mates_list_view)
+    ListView tripMatesListView;
 
-    @BindView(R.id.month_text_view)
-    TextView monthTextView;
+    @BindView(R.id.users_list_empty_view)
+    TextView usersListEmptyView;
+
+    @BindView(R.id.user_emaiL_edit_text)
+    EditText addUserEmailEditText;
+
+    @BindView(R.id.add_user_button)
+    Button addUserButton;
 
     private Calendar startCalendar = null;
+
     private Calendar endCalendar;
+
+    private TripMatesListAdapter listAdapter;
+
+    private final ArrayList<User> travelMatesList = new ArrayList<>();
+
+    private DatabaseReference mUsersReference;
+
+    private ValueEventListener mValueEventListener;
 
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
 
@@ -62,6 +93,23 @@ public class AddNewTripFragment extends Fragment {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mUsersReference = FirebaseDatabase.getInstance().getReference().child(FirebaseDatabaseHelper.DB_NODE_USERS);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,42 +140,63 @@ public class AddNewTripFragment extends Fragment {
             endDateEditText.setEnabled(false);
         }
 
-        if(endCalendar == null) {
-            compactCalendarView.setVisibility(View.GONE);
-        }
-        else {
-            compactCalendarView.setVisibility(View.VISIBLE);
-            showCalendarLayout();
-        }
+        listAdapter = new TripMatesListAdapter(getContext(), travelMatesList);
+        tripMatesListView.setAdapter(listAdapter);
+        tripMatesListView.setEmptyView(usersListEmptyView);
 
-        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+        addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDayClick(Date dateClicked) {
-                // Lets launch the itinerary planner here
-            }
-
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                //month text view update
-                updateMonthTextView(firstDayOfNewMonth);
+            public void onClick(View view) {
+                addUser();
             }
         });
 
         return view;
     }
 
-    private void updateMonthTextView(Date date) {
-        monthTextView.setText(dateFormatForMonth.format(date));
-    }
+    private void addUser() {
+        String email = addUserEmailEditText.getText().toString().trim();
+        if(validateEmail(email)) {
+            //Add user
+            addUserEmailEditText.setError(null);
+            mUsersReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Logger.d("User found on DB");
+                    if(dataSnapshot != null) {
+                        User user = new User();
+                        Iterator it = ((HashMap)dataSnapshot.getValue()).entrySet().iterator();
+                        while(it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            user.setEmail((String)((HashMap)pair.getValue()).get("email"));
+                            user.setId((String)((HashMap)pair.getValue()).get("id"));
+                            user.setName((String)((HashMap)pair.getValue()).get("name"));
+                            break;
+                        }
+                        travelMatesList.add(user);
+                        listAdapter.notifyDataSetChanged();
+                    }
+                }
 
-    private void showCalendarLayout() {
-        monthLayout.setVisibility(View.VISIBLE);
-        monthTextView.setText(dateFormatForMonth.format(Calendar.getInstance().getTime()));
-        if (!compactCalendarView.isAnimating()) {
-            compactCalendarView.showCalendarWithAnimation();
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    com.orhanobut.logger.Logger.e("User Listener cancelled"+databaseError.getMessage());
+                }
+            });
+            addUserEmailEditText.setText(null);
+        }
+        else {
+            addUserEmailEditText.setError(getString(R.string.str_email_error));
         }
     }
 
+    private boolean validateEmail(String email) {
+        if (email == null || TextUtils.isEmpty(email)) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        }
+    }
 
     private void showDatePicker(TextInputEditText editText, Calendar displayCalendar,boolean isStart) {
         MyDatePickerCallback datePickerCallback = new MyDatePickerCallback(editText, isStart);
@@ -168,8 +237,7 @@ public class AddNewTripFragment extends Fragment {
             }
             else {
                 endCalendar = calendar;
-                compactCalendarView.setVisibility(View.VISIBLE);
-                showCalendarLayout();
+                showTripMatesLayout();
             }
 
             String myFormat = "MM/dd/yy"; //In which you need put here
@@ -179,6 +247,10 @@ public class AddNewTripFragment extends Fragment {
             textInputEditText.clearFocus();
             hideKeyboard();
         }
+    }
+
+    private void showTripMatesLayout() {
+
     }
 
     private void hideKeyboard() {

@@ -14,12 +14,16 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
+import sai.developement.travelogue.models.User;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -27,6 +31,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private DatabaseReference mDatabaseReference;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -38,11 +43,18 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if(null != currentUser) {
+                    // Add the user to Firebase if not yet added
+                    User user = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail());
+
+                    FirebaseDatabaseHelper.onLoginComplete(mDatabaseReference, user);
+
                     Toast.makeText(HomeActivity.this, "You are logged in! Welcome " + currentUser.getDisplayName(),
                             Toast.LENGTH_LONG).show();
                 }

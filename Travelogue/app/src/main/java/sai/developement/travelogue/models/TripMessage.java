@@ -9,31 +9,20 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class TripMessage {
 
-    public String id;
     public String message;
     public String sentTime;
-
-    //Stores the parent Trip ID
-    public String tripId;
+    public String userName;
 
     public TripMessage() {
 
     }
 
-    public TripMessage(String id, String message, String sentTime, String tripId) {
-        this.id = id;
+    public TripMessage(String id, String message, String sentTime, String userName) {
         this.message = message;
         this.sentTime = sentTime;
-        this.tripId = tripId;
+        this.userName = userName;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getMessage() {
         return message;
@@ -49,13 +38,5 @@ public class TripMessage {
 
     public void setSentTime(String sentTime) {
         this.sentTime = sentTime;
-    }
-
-    public String getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
     }
 }

@@ -12,6 +12,13 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            useProguard false
+            debuggable true
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -44,8 +51,8 @@ dependencies {
     //EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
 
-    //Calendar control
-    compile 'com.github.sundeepk:compact-calendar-view:2.0.0'
+    // LOgger
+    compile 'com.orhanobut:logger:1.15'
 
     testCompile 'junit:junit:4.12'
 }

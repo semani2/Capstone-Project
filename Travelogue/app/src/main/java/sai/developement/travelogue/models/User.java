@@ -1,25 +1,22 @@
 package sai.developement.travelogue.models;
 
-import com.google.firebase.database.IgnoreExtraProperties;
-
 /**
  * Created by sai on 2/28/17.
  */
 
-@IgnoreExtraProperties
 public class User {
     public String id;
     public String name;
-    public String profileImageUrl;
+    public String email;
 
     public User() {
 
     }
 
-    public User(String id, String name, String profileImageUrl) {
+    public User(String id, String name, String email) {
         this.id = id;
         this.name = name;
-        this.profileImageUrl = profileImageUrl;
+        this.email = email;
     }
 
     public String getId() {
@@ -38,11 +35,11 @@ public class User {
         this.name = name;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getEmail() {
+        return email;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

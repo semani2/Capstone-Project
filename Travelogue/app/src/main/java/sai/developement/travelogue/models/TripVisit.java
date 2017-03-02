@@ -16,18 +16,14 @@ public class TripVisit {
     // URL to render image of the place the travllers are visiting
     public String imageUrl;
 
-    // Stores the ID of the parent TripDay
-    public String tripDayId;
-
     public TripVisit() {
 
     }
 
-    public TripVisit(String tripTime, String place, String imageUrl, String tripDayId) {
+    public TripVisit(String tripTime, String place, String imageUrl) {
         this.tripTime = tripTime;
         this.place = place;
         this.imageUrl = imageUrl;
-        this.tripDayId = tripDayId;
     }
 
     public String getTripTime() {
@@ -52,13 +48,5 @@ public class TripVisit {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getTripDayId() {
-        return tripDayId;
-    }
-
-    public void setTripDayId(String tripDayId) {
-        this.tripDayId = tripDayId;
     }
 }

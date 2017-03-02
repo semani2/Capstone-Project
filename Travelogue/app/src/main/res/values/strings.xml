@@ -9,4 +9,9 @@
     <string name="str_trip_name">Trip name</string>
     <string name="str_trip_from">From</string>
     <string name="str_trip_to">To</string>
+    <string name="str_add_users_title">Trip mates</string>
+    <string name="str_add_users_hint">Enter friend\'s email to add to trip</string>
+    <string name="str_add_user">Add</string>
+    <string name="str_solo_trip">Look\'s like you are travelling alone! Why don\'t you ask a few friends to join?</string>
+    <string name="str_email_error">Please enter a valid email address</string>
 </resources>
