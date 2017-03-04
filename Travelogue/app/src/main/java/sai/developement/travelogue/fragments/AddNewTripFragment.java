@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -20,11 +20,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.logger.Logger;
 
@@ -35,12 +37,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.TripMatesListAdapter;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
+import sai.developement.travelogue.helpers.GenerateGUIDHelper;
+import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.User;
 
 /**
@@ -75,6 +80,12 @@ public class AddNewTripFragment extends Fragment {
     @BindView(R.id.add_user_button)
     Button addUserButton;
 
+    @BindView(R.id.save_trip_button)
+    Button saveTripButton;
+
+    @BindView(R.id.progress_bar_layout)
+    LinearLayout progressBarLayout;
+
     private Calendar startCalendar = null;
 
     private Calendar endCalendar;
@@ -83,22 +94,10 @@ public class AddNewTripFragment extends Fragment {
 
     private final ArrayList<User> travelMatesList = new ArrayList<>();
 
-    private DatabaseReference mUsersReference;
-
-    private ValueEventListener mValueEventListener;
-
-    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
+    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     public AddNewTripFragment() {
         // Required empty public constructor
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mUsersReference = FirebaseDatabase.getInstance().getReference().child(FirebaseDatabaseHelper.DB_NODE_USERS);
-
     }
 
     @Override
@@ -151,42 +150,126 @@ public class AddNewTripFragment extends Fragment {
             }
         });
 
+        saveTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveTrip();
+            }
+        });
+
         return view;
     }
 
+    private void saveTrip() {
+        toggleProgressBar(true);
+        if(validateInput(tripNameEditText, startDateEditText, endDateEditText)) {
+            String tripId = GenerateGUIDHelper.generateGUID(GenerateGUIDHelper.Model.TRIP);
+
+            String startDate = dateFormatForMonth.format(startCalendar.getTime());
+            String endDate = dateFormatForMonth.format(endCalendar.getTime());
+            long duration = TimeUnit.MILLISECONDS.toDays(Math.abs(endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()));
+
+            String tripName = tripNameEditText.getText().toString().trim();
+
+            final Trip trip = new Trip();
+            trip.setId(tripId);
+            trip.setName(tripName);
+            trip.setStartDate(startDate);
+            trip.setEndDate(endDate);
+            trip.setDuration(duration);
+            trip.setTravellers(travelMatesList);
+            if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                trip.setCreatedByUsername(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                trip.setCreateByUseremail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            }
+
+            FirebaseDatabaseHelper.addNewTrip(trip, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    toggleProgressBar(false);
+                    if(task.isSuccessful()) {
+                        Logger.d("New trip created successfully : " +trip.getId());
+                        Toast.makeText(getContext(), getString(R.string.str_new_trip_created, trip.getName()), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Logger.e("Error creating new trip", task.getException());
+                    }
+                }
+            });
+        }
+    }
+
+    private boolean validateInput(TextInputEditText... editTexts) {
+        boolean validInput = true;
+
+        for(int i=0; i< editTexts.length;i++) {
+            //Clearing out old errors
+            editTexts[i].setError(null);
+
+            if(editTexts[i].getText().toString() == null || editTexts[i].getText().toString().trim().isEmpty()) {
+                editTexts[i].setError(getString(R.string.str_required_field));
+                validInput = false;
+            }
+        }
+
+        return validInput;
+    }
+
     private void addUser() {
+        toggleProgressBar(true);
         String email = addUserEmailEditText.getText().toString().trim();
         if(validateEmail(email)) {
             //Add user
             addUserEmailEditText.setError(null);
-            mUsersReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            final ValueEventListener valueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Logger.d("User found on DB");
-                    if(dataSnapshot != null) {
+                    if (dataSnapshot != null) {
                         User user = new User();
-                        Iterator it = ((HashMap)dataSnapshot.getValue()).entrySet().iterator();
-                        while(it.hasNext()) {
-                            Map.Entry pair = (Map.Entry)it.next();
-                            user.setEmail((String)((HashMap)pair.getValue()).get("email"));
-                            user.setId((String)((HashMap)pair.getValue()).get("id"));
-                            user.setName((String)((HashMap)pair.getValue()).get("name"));
+                        Iterator it = ((HashMap) dataSnapshot.getValue()).entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry) it.next();
+                            user.setEmail((String) ((HashMap) pair.getValue()).get("email"));
+                            user.setId((String) ((HashMap) pair.getValue()).get("id"));
+                            user.setName((String) ((HashMap) pair.getValue()).get("name"));
                             break;
                         }
-                        travelMatesList.add(user);
-                        listAdapter.notifyDataSetChanged();
+                        toggleProgressBar(false);
+                        verifyAndAddToList(user);
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    com.orhanobut.logger.Logger.e("User Listener cancelled"+databaseError.getMessage());
+                    Logger.e("User Listener cancelled" + databaseError.getMessage());
                 }
-            });
+            };
+            FirebaseDatabaseHelper.getUserByEmail(email, valueEventListener);
             addUserEmailEditText.setText(null);
         }
         else {
             addUserEmailEditText.setError(getString(R.string.str_email_error));
+        }
+    }
+
+    private void verifyAndAddToList(User newUser) {
+        Iterator<User> iterator = travelMatesList.iterator();
+
+        boolean alreadyExists = false;
+        while(iterator.hasNext()) {
+            User currentUser = iterator.next();
+            if(newUser.getEmail().equalsIgnoreCase(currentUser.getEmail())) {
+                alreadyExists = true;
+                break;
+            }
+        }
+        if(!alreadyExists) {
+            travelMatesList.add(newUser);
+            listAdapter.notifyDataSetChanged();
+        }
+        else {
+            Toast.makeText(getContext(), getString(R.string.str_user_already_exists, newUser.getEmail()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -262,6 +345,10 @@ public class AddNewTripFragment extends Fragment {
             view = new View(getActivity());
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void toggleProgressBar(boolean isBusy) {
+        progressBarLayout.setVisibility(isBusy ? View.VISIBLE : View.GONE);
     }
 
 }

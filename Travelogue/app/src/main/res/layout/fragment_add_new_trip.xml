@@ -10,33 +10,23 @@
         android:padding="10dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/wohoo_text_view"
             android:text="@string/str_wohoo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:textStyle="normal"
-            android:textSize="30sp"
-            android:textColor="@color/text_primary"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/title_text_view"
-            android:layout_below="@+id/wohoo_text_view"
-            android:text="@string/str_next_trip_title"
-            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:layout_marginTop="5dp"
             android:textStyle="normal"
             android:textSize="25sp"
-            android:textColor="@color/text_secondary"/>
+            android:textColor="@color/text_primary"/>
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/trip_name_text_input_layout"
-            android:layout_below="@+id/title_text_view"
+            android:layout_below="@+id/wohoo_text_view"
             android:layout_marginTop="10dp">
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
@@ -74,23 +64,13 @@
                 android:focusable="false"/>
 
         </LinearLayout>
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#aaaaaa"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="100dp"
-            android:layout_below="@id/date_picker_layout"
-            android:id="@+id/separator_layout"
-            android:layout_marginTop="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/add_users_layout"
-            android:layout_below="@+id/separator_layout"
+            android:layout_below="@+id/date_picker_layout"
             android:layout_marginTop="15dp">
 
             <TextView
@@ -145,6 +125,24 @@
                 android:text="@string/str_solo_trip"
                 android:visibility="gone"/>
         </LinearLayout>
+        
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_trip_button"
+            android:text="@string/str_save_trip"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:background="@color/colorPrimary"
+            android:layout_below="@id/add_users_layout"
+            android:padding="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"/>
+        
+       <include layout="@layout/progress_bar_layout"
+           android:id="@+id/progress_bar_layout"
+           android:visibility="gone" />
 
     </RelativeLayout>
 

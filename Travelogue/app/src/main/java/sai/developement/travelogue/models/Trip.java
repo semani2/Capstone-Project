@@ -17,19 +17,24 @@ public class Trip {
     public String endDate;
     public List<User> travellers;
     public Long duration;
+    public String createdByUsername;
+    public String createByUseremail;
 
 
     public Trip() {
         // Default constructor for Firebase
     }
 
-    public Trip(String id, String name, String startDate, String endDate, List<User> travellers, Long duration) {
+    public Trip(String id, String name, String startDate, String endDate, List<User> travellers, Long duration,
+                String createdByUsername, String createByUseremail) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.travellers = travellers;
         this.duration = duration;
+        this.createdByUsername = createdByUsername;
+        this.createByUseremail = createByUseremail;
     }
 
     public String getId() {
@@ -78,5 +83,21 @@ public class Trip {
 
     public void setDuration(Long duration) {
         this.duration = duration;
+    }
+
+    public String getCreatedByUsername() {
+        return createdByUsername;
+    }
+
+    public void setCreatedByUsername(String createdByUsername) {
+        this.createdByUsername = createdByUsername;
+    }
+
+    public String getCreateByUseremail() {
+        return createByUseremail;
+    }
+
+    public void setCreateByUseremail(String createByUseremail) {
+        this.createByUseremail = createByUseremail;
     }
 }
