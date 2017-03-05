@@ -14,6 +14,8 @@ public class NewTripActivity extends AppCompatActivity {
     @BindView(R.id.new_trip_fragment_container)
     FrameLayout fragmentContainer;
 
+    private static final String NEW_TRIP_FRAGENT_ID = "new_trip_fragment_id";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,9 +27,11 @@ public class NewTripActivity extends AppCompatActivity {
     }
 
     private void launchAddNewTripFragment() {
-        AddNewTripFragment fragment = new AddNewTripFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.new_trip_fragment_container, fragment)
-                .commit();
+        if(getSupportFragmentManager().findFragmentByTag(NEW_TRIP_FRAGENT_ID) == null) {
+            AddNewTripFragment fragment = new AddNewTripFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.new_trip_fragment_container, fragment, NEW_TRIP_FRAGENT_ID)
+                    .commit();
+        }
     }
 }

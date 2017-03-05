@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.orhanobut.logger.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,10 +62,10 @@ public class AddNewTripFragment extends Fragment {
     TextInputEditText tripNameEditText;
 
     @BindView(R.id.start_date_edit_text)
-    TextInputEditText startDateEditText;
+    EditText startDateEditText;
 
     @BindView(R.id.end_date_edit_text)
-    TextInputEditText endDateEditText;
+    EditText endDateEditText;
 
     @BindView(R.id.add_users_layout)
     LinearLayout addUsersLayout;
@@ -84,17 +86,22 @@ public class AddNewTripFragment extends Fragment {
     Button saveTripButton;
 
     @BindView(R.id.progress_bar_layout)
-    LinearLayout progressBarLayout;
+    RelativeLayout progressBarLayout;
 
     private Calendar startCalendar = null;
 
-    private Calendar endCalendar;
+    private Calendar endCalendar = null;
 
     private TripMatesListAdapter listAdapter;
 
-    private final ArrayList<User> travelMatesList = new ArrayList<>();
+    private ArrayList<User> travelMatesList = new ArrayList<>();
 
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+
+    private static final String TRIP_NAME_KEY = "trip_name";
+    private static final String TRIP_START_DATE_KEY = "trip_start_date";
+    private static final String TRIP_END_DATE_KEY = "trip_end_date";
+    private static final String TRAVELLERS_KEY = "travellers";
 
     public AddNewTripFragment() {
         // Required empty public constructor
@@ -135,13 +142,33 @@ public class AddNewTripFragment extends Fragment {
         };
         endDateEditText.setOnClickListener(endDateClickListener);
 
-        if(startCalendar == null) {
-            endDateEditText.setEnabled(false);
-        }
-
         listAdapter = new TripMatesListAdapter(getContext(), travelMatesList);
         tripMatesListView.setAdapter(listAdapter);
         tripMatesListView.setEmptyView(usersListEmptyView);
+
+        if(savedInstanceState != null) {
+            if(savedInstanceState.getString(TRIP_NAME_KEY) != null) {
+                tripNameEditText.setText(savedInstanceState.getString(TRIP_NAME_KEY));
+            }
+            if(savedInstanceState.getSerializable(TRIP_START_DATE_KEY) != null)  {
+                startCalendar = (Calendar)savedInstanceState.getSerializable(TRIP_START_DATE_KEY);
+                startDateEditText.setText(dateFormatForMonth.format(startCalendar.getTime()));
+            }
+            if(savedInstanceState.getSerializable(TRIP_END_DATE_KEY) != null) {
+                endCalendar = (Calendar)savedInstanceState.getSerializable(TRIP_END_DATE_KEY);
+                endDateEditText.setText(dateFormatForMonth.format(endCalendar.getTime()));
+            }
+            if(savedInstanceState.getParcelableArray(TRAVELLERS_KEY) != null && savedInstanceState.getParcelableArray(TRAVELLERS_KEY).length > 0) {
+                travelMatesList.clear();
+                User[] travelMates = (User[])savedInstanceState.getParcelableArray(TRAVELLERS_KEY);
+                travelMatesList.addAll(Arrays.asList(travelMates));
+                listAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if(startCalendar == null) {
+            endDateEditText.setEnabled(false);
+        }
 
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,7 +226,7 @@ public class AddNewTripFragment extends Fragment {
         }
     }
 
-    private boolean validateInput(TextInputEditText... editTexts) {
+    private boolean validateInput(EditText... editTexts) {
         boolean validInput = true;
 
         for(int i=0; i< editTexts.length;i++) {
@@ -281,7 +308,7 @@ public class AddNewTripFragment extends Fragment {
         }
     }
 
-    private void showDatePicker(TextInputEditText editText, Calendar displayCalendar,boolean isStart) {
+    private void showDatePicker(EditText editText, Calendar displayCalendar,boolean isStart) {
         MyDatePickerCallback datePickerCallback = new MyDatePickerCallback(editText, isStart);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), datePickerCallback, displayCalendar.get(Calendar.YEAR),
@@ -290,15 +317,34 @@ public class AddNewTripFragment extends Fragment {
         datePickerDialog.show();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(tripNameEditText.getText()!= null && !tripNameEditText.getText().toString().trim().isEmpty()) {
+            outState.putString(TRIP_NAME_KEY, tripNameEditText.getText().toString());
+        }
 
+        if(startCalendar != null) {
+            outState.putSerializable(TRIP_START_DATE_KEY, startCalendar);
+        }
+
+        if(endCalendar != null) {
+            outState.putSerializable(TRIP_END_DATE_KEY, endCalendar);
+        }
+
+        if(travelMatesList.size() > 0) {
+            User[] userArray = new User[travelMatesList.size()];
+            outState.putParcelableArray(TRAVELLERS_KEY, travelMatesList.toArray(userArray));
+        }
+    }
 
     class MyDatePickerCallback implements DatePickerDialog.OnDateSetListener, DatePickerDialog.OnCancelListener {
 
-        private final TextInputEditText textInputEditText;
+        private final EditText editText;
         private final boolean isStart;
 
-        public MyDatePickerCallback(TextInputEditText textInputEditText, boolean isStart) {
-            this.textInputEditText = textInputEditText;
+        public MyDatePickerCallback(EditText textInputEditText, boolean isStart) {
+            this.editText = textInputEditText;
             this.isStart = isStart;
         }
 
@@ -320,20 +366,12 @@ public class AddNewTripFragment extends Fragment {
             }
             else {
                 endCalendar = calendar;
-                showTripMatesLayout();
             }
 
-            String myFormat = "MM/dd/yy"; //In which you need put here
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-            textInputEditText.setText(sdf.format(calendar.getTime()));
-            textInputEditText.clearFocus();
+            editText.setText(dateFormatForMonth.format(calendar.getTime()));
+            editText.clearFocus();
             hideKeyboard();
         }
-    }
-
-    private void showTripMatesLayout() {
-
     }
 
     private void hideKeyboard() {
