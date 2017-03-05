@@ -22,4 +22,6 @@
     <string name="str_trip_details">Details</string>
 
     <string name="str_day">Day - %1$s</string>
+
+    <string name="str_no_trips">Sorry! No trips for you...</string>
 </resources>

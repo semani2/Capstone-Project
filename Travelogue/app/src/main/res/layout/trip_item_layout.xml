@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="5dp"
+    android:elevation="4dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trip_name_text_view"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            tools:hint="Sample Trip"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trip_date_text_view"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            tools:hint="10 Mar 2017 - 15 Mar 2017"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trip_creator_text_view"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            android:textStyle="italic"
+            tools:hint="Sai Prajnan"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
