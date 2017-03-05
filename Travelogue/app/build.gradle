@@ -12,6 +12,13 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            useProguard false
+            debuggable true
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -29,6 +36,9 @@ dependencies {
     // Firebase dependencies
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-crash:10.2.0'
+    compile 'com.google.firebase:firebase-core:10.2.0'
 
     // Volley
     compile 'com.android.volley:volley:1.0.0'
@@ -42,6 +52,9 @@ dependencies {
 
     //EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
+
+    // LOgger
+    compile 'com.orhanobut:logger:1.15'
 
     testCompile 'junit:junit:4.12'
 }

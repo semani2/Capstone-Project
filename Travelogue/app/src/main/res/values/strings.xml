@@ -2,4 +2,19 @@
     <string name="app_name">Travelogue</string>
 
     <string name="str_logout">Logout</string>
+
+    <!-- Add New Trip fragment strings -->
+    <string name="str_wohoo">Woo-hoo! Let\'s plan your next big trip</string>
+    <string name="str_trip_name">Trip name</string>
+    <string name="str_trip_from">From</string>
+    <string name="str_trip_to">To</string>
+    <string name="str_add_users_title">Trip mates</string>
+    <string name="str_add_users_hint">Enter your friend\'s email</string>
+    <string name="str_add_user">Add</string>
+    <string name="str_solo_trip">Look\'s like you are travelling alone! Why don\'t you ask a few friends to join?</string>
+    <string name="str_email_error">Please enter a valid email address</string>
+    <string name="str_save_trip">Save Trip</string>
+    <string name="str_required_field">This is a required field.</string>
+    <string name="str_new_trip_created">Yay! %1$s has been successfully created.</string>
+    <string name="str_user_already_exists">%1$s is already part of the trip.</string>
 </resources>
