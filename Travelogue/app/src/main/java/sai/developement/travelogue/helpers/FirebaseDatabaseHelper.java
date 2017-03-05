@@ -68,6 +68,12 @@ public class FirebaseDatabaseHelper {
                 .child(FirebaseDatabaseHelper.DB_NODE_SHARED_TRIPS);
     }
 
+    private static DatabaseReference getTripDaysReference() {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(FirebaseDatabaseHelper.DB_NODE_TRIP_DAYS);
+    }
+
     public static void addNewTrip(final Trip trip, final OnCompleteListener<Void> finalCompleteListener) {
         String userId = getCurrentUserId();
         if(userId != null) {
@@ -105,6 +111,12 @@ public class FirebaseDatabaseHelper {
                     .setValue(trip);
             Logger.d("Travel mate to trip : " +trip.getName() + ", User : " +user.getEmail());
         }
+    }
+
+    public static void getItineraryForTrip(String tripId, ValueEventListener valueEventListener) {
+        DatabaseReference tripDaysReference = getTripDaysReference();
+        tripDaysReference.child(tripId)
+                .addListenerForSingleValueEvent(valueEventListener);
     }
 
 

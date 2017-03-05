@@ -4,6 +4,7 @@ package sai.developement.travelogue.fragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -44,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.adapters.TripMatesListAdapter;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.GenerateGUIDHelper;
@@ -194,7 +196,7 @@ public class AddNewTripFragment extends Fragment {
 
             String startDate = dateFormatForMonth.format(startCalendar.getTime());
             String endDate = dateFormatForMonth.format(endCalendar.getTime());
-            long duration = TimeUnit.MILLISECONDS.toDays(Math.abs(endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()));
+            int duration = (int)TimeUnit.MILLISECONDS.toDays(Math.abs(endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()));
 
             String tripName = tripNameEditText.getText().toString().trim();
 
@@ -217,6 +219,7 @@ public class AddNewTripFragment extends Fragment {
                     if(task.isSuccessful()) {
                         Logger.d("New trip created successfully : " +trip.getId());
                         Toast.makeText(getContext(), getString(R.string.str_new_trip_created, trip.getName()), Toast.LENGTH_LONG).show();
+                        goToViewActivity(trip);
                     }
                     else {
                         Logger.e("Error creating new trip", task.getException());
@@ -224,6 +227,15 @@ public class AddNewTripFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void goToViewActivity(Trip trip) {
+        Intent viewIntent = new Intent(getActivity(), ViewTripActivity.class);
+        Bundle extras = new Bundle();
+        extras.putParcelable(ViewTripActivity.TRIP_KEY, trip);
+        viewIntent.putExtras(extras);
+        startActivity(viewIntent);
+        getActivity().finish();
     }
 
     private boolean validateInput(EditText... editTexts) {

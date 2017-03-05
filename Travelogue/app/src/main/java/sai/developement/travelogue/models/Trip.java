@@ -1,7 +1,11 @@
 package sai.developement.travelogue.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,14 +13,14 @@ import java.util.List;
  */
 
 @IgnoreExtraProperties
-public class Trip {
+public class Trip implements Parcelable {
 
     public String id;
     public String name;
     public String startDate;
     public String endDate;
     public List<User> travellers;
-    public Long duration;
+    public int duration;
     public String createdByUsername;
     public String createByUseremail;
 
@@ -25,7 +29,7 @@ public class Trip {
         // Default constructor for Firebase
     }
 
-    public Trip(String id, String name, String startDate, String endDate, List<User> travellers, Long duration,
+    public Trip(String id, String name, String startDate, String endDate, List<User> travellers, int duration,
                 String createdByUsername, String createByUseremail) {
         this.id = id;
         this.name = name;
@@ -77,11 +81,11 @@ public class Trip {
         this.travellers = travellers;
     }
 
-    public Long getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(Long duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -100,4 +104,55 @@ public class Trip {
     public void setCreateByUseremail(String createByUseremail) {
         this.createByUseremail = createByUseremail;
     }
+
+    protected Trip(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        startDate = in.readString();
+        endDate = in.readString();
+        if (in.readByte() == 0x01) {
+            travellers = new ArrayList<User>();
+            in.readList(travellers, User.class.getClassLoader());
+        } else {
+            travellers = null;
+        }
+        duration = in.readInt();
+        createdByUsername = in.readString();
+        createByUseremail = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(startDate);
+        dest.writeString(endDate);
+        if (travellers == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(travellers);
+        }
+        dest.writeInt(duration);
+        dest.writeString(createdByUsername);
+        dest.writeString(createByUseremail);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Trip> CREATOR = new Parcelable.Creator<Trip>() {
+        @Override
+        public Trip createFromParcel(Parcel in) {
+            return new Trip(in);
+        }
+
+        @Override
+        public Trip[] newArray(int size) {
+            return new Trip[size];
+        }
+    };
 }
