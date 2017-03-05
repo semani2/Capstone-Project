@@ -244,26 +244,33 @@ public class AddNewTripFragment extends Fragment {
 
     private void addUser() {
         toggleProgressBar(true);
-        String email = addUserEmailEditText.getText().toString().trim();
+        final String email = addUserEmailEditText.getText().toString().trim();
         if(validateEmail(email)) {
             //Add user
             addUserEmailEditText.setError(null);
             final ValueEventListener valueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Logger.d("User found on DB");
-                    if (dataSnapshot != null) {
-                        User user = new User();
-                        Iterator it = ((HashMap) dataSnapshot.getValue()).entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry pair = (Map.Entry) it.next();
-                            user.setEmail((String) ((HashMap) pair.getValue()).get("email"));
-                            user.setId((String) ((HashMap) pair.getValue()).get("id"));
-                            user.setName((String) ((HashMap) pair.getValue()).get("name"));
-                            break;
-                        }
+                    if(isAdded()) {
                         toggleProgressBar(false);
-                        verifyAndAddToList(user);
+                        Logger.d("User found on DB");
+                        if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                            User user = new User();
+                            Iterator it = ((HashMap) dataSnapshot.getValue()).entrySet().iterator();
+                            while (it.hasNext()) {
+                                Map.Entry pair = (Map.Entry) it.next();
+                                user.setEmail((String) ((HashMap) pair.getValue()).get("email"));
+                                user.setId((String) ((HashMap) pair.getValue()).get("id"));
+                                user.setName((String) ((HashMap) pair.getValue()).get("name"));
+                                break;
+                            }
+
+                            verifyAndAddToList(user);
+                        } else {
+                            // No user with email found
+                            Logger.d("No user with email " + email + " found.");
+                            Toast.makeText(getActivity(), getString(R.string.str_no_user_found, email), Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
 
@@ -276,6 +283,7 @@ public class AddNewTripFragment extends Fragment {
             addUserEmailEditText.setText(null);
         }
         else {
+            toggleProgressBar(false);
             addUserEmailEditText.setError(getString(R.string.str_email_error));
         }
     }
