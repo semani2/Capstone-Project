@@ -1,6 +1,7 @@
 package sai.developement.travelogue.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.fragments.DayFragment;
 import sai.developement.travelogue.fragments.TripDetailsFragment;
 import sai.developement.travelogue.models.Trip;
@@ -32,10 +34,17 @@ public class TripPagesAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Fragment fragment;
+        Bundle extras = new Bundle();
+        extras.putParcelable(ViewTripActivity.TRIP_KEY, mTrip);
         if(position == 0) {
-            return new TripDetailsFragment();
+            fragment = new TripDetailsFragment();
         }
-        return new DayFragment();
+        else {
+            fragment = new DayFragment();
+        }
+        fragment.setArguments(extras);
+        return fragment;
 
     }
 

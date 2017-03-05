@@ -98,7 +98,7 @@ public class AddNewTripFragment extends Fragment {
 
     private ArrayList<User> travelMatesList = new ArrayList<>();
 
-    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.US);
 
     private static final String TRIP_NAME_KEY = "trip_name";
     private static final String TRIP_START_DATE_KEY = "trip_start_date";
