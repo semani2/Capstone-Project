@@ -148,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
         tripsRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mTripsAdapter = new TripsRecyclerAdapter(mTrips);
+        mTripsAdapter = new TripsRecyclerAdapter(mTrips, this);
         tripsRecyclerView.setAdapter(mTripsAdapter);
 
         if(mTrips.size() == 0) {

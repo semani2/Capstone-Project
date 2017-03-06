@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="5dp"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:id="@+id/trip_layout">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,5 +1,9 @@
 package sai.developement.travelogue.adapters;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.models.Trip;
 
 /**
@@ -18,9 +23,11 @@ import sai.developement.travelogue.models.Trip;
 public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdapter.TripViewHolder> {
 
     private final ArrayList<Trip> mTripsLit;
+    private final Activity mActivity;
 
-    public TripsRecyclerAdapter(ArrayList<Trip> trips) {
+    public TripsRecyclerAdapter(ArrayList<Trip> trips, Activity activity) {
         mTripsLit = trips;
+        mActivity = activity;
     }
 
     @Override
@@ -32,11 +39,23 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(TripViewHolder holder, int position) {
+    public void onBindViewHolder(TripViewHolder holder, final int position) {
         holder.mTripNameTextView.setText(mTripsLit.get(position).getName());
         holder.mDateTextView.setText(mTripsLit.get(position).getStartDate() + " - "
                 + mTripsLit.get(position).getEndDate());
         holder.mTripCreatorTextView.setText(mTripsLit.get(position).getCreatedByUsername());
+        holder.mTripLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle extras = new Bundle();
+                extras.putParcelable(ViewTripActivity.TRIP_KEY, mTripsLit.get(position));
+
+                Intent intent = new Intent(mActivity, ViewTripActivity.class);
+                intent.putExtras(extras);
+
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -49,13 +68,14 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
         public TextView mTripNameTextView;
         public TextView mDateTextView;
         public TextView mTripCreatorTextView;
+        public CardView mTripLayout;
 
         public TripViewHolder(View v) {
             super(v);
             mTripNameTextView = (TextView) v.findViewById(R.id.trip_name_text_view);
             mDateTextView = (TextView) v.findViewById(R.id.trip_date_text_view);
             mTripCreatorTextView = (TextView) v.findViewById(R.id.trip_creator_text_view);
-
+            mTripLayout = (CardView) v.findViewById(R.id.trip_layout);
         }
     }
 }

@@ -53,7 +53,6 @@ public class ViewTripActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
-
         mTrip = getIntent().getExtras().getParcelable(TRIP_KEY);
 
         mTripPagesAdapter = new TripPagesAdapter(mTrip, mTripDaysList, this, getSupportFragmentManager());
