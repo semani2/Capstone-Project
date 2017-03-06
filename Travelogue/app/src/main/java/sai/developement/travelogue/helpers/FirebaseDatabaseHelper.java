@@ -56,7 +56,7 @@ public class FirebaseDatabaseHelper {
     Trips helper methods
      */
 
-    private static DatabaseReference getTripsDatabaseReference() {
+    public static DatabaseReference getTripsDatabaseReference() {
         return FirebaseDatabase.getInstance()
                 .getReference()
                 .child(FirebaseDatabaseHelper.DB_NODE_TRIPS);
@@ -118,6 +118,5 @@ public class FirebaseDatabaseHelper {
         tripDaysReference.child(tripId)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
-
 
 }
