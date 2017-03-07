@@ -35,8 +35,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.ItineraryRecyclerAdapter;
+import sai.developement.travelogue.adapters.SuggestionsAdapter;
+import sai.developement.travelogue.asynctasks.LoadSuggestionsTask;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.GenerateGUIDHelper;
+import sai.developement.travelogue.listeners.RecyclerItemClickListener;
+import sai.developement.travelogue.models.Suggestion;
 import sai.developement.travelogue.models.TripDay;
 import sai.developement.travelogue.models.TripVisit;
 
@@ -200,7 +204,52 @@ public class DayFragment extends Fragment {
             }
         });
 
+        tripPlaceEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleItineraryProgress(true);
+                showAndLoadSuggestions();
+            }
+        });
+
         return view;
+    }
+
+    private void showAndLoadSuggestions() {
+        LoadSuggestionsTask task = new LoadSuggestionsTask(getContext(), "Raleigh, NC",
+                new LoadSuggestionsTask.ISuggestionsCallback() {
+                    @Override
+                    public void onSuggestionsLoaded(final List<Suggestion> suggestionList) {
+                        toggleItineraryProgress(false);
+                        SuggestionsAdapter suggestionsAdapter = new SuggestionsAdapter(suggestionList, getContext());
+                        initSuggestionsRecyclerView();
+                        suggestionsRecyclerView.setAdapter(suggestionsAdapter);
+                        suggestionsLayout.setVisibility(View.VISIBLE);
+
+                        suggestionsRecyclerView.addOnItemTouchListener(
+                                new RecyclerItemClickListener(getContext(), suggestionsRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                                    @Override public void onItemClick(View view, int position) {
+                                        suggestionsLayout.setVisibility(View.GONE);
+                                        tripPlaceEditText.setText(suggestionList.get(position).getName());
+                                    }
+
+                                    @Override public void onLongItemClick(View view, int position) {
+                                        // do whatever
+                                    }
+                                })
+                        );
+                    }
+
+                    private void initSuggestionsRecyclerView() {
+                        suggestionsRecyclerView.setHasFixedSize(true);
+
+                        LinearLayoutManager layoutManager
+                                = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+                        suggestionsRecyclerView.setLayoutManager(layoutManager);
+                    }
+                });
+        task.execute();
     }
 
     private void clearItiEditTexts() {
@@ -332,6 +381,10 @@ public class DayFragment extends Fragment {
             itineraryRecyclerView.setVisibility(View.VISIBLE);
             emptyItineraryTextView.setVisibility(View.GONE);
         }
+    }
+
+    private void toggleItineraryProgress(boolean isBusy) {
+        itineraryProgressBar.setVisibility(isBusy ? View.VISIBLE : View.GONE);
     }
 
 }

@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class TripMatesListAdapter extends ArrayAdapter<User> {
         ImageView profileImageView = (ImageView) convertView.findViewById(R.id.user_profile_image_view);
         TextView userNameTextView = (TextView) convertView.findViewById(R.id.user_name_text_view);
         TextView userEmailTextView = (TextView) convertView.findViewById(R.id.user_email_text_view);
-        Picasso.with(mContext)
+        Glide.with(mContext)
                 .load(Uri.parse("https://randomuser.me/api/portraits/lego/"+getRandomImageId()+".jpg"))
                 .into(profileImageView);
         userNameTextView.setText(user.getName());

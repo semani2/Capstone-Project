@@ -140,19 +140,21 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:id="@+id/suggestions_layout"
-        android:layout_gravity="bottom"
-        android:visibility="gone">
+        android:layout_gravity="bottom|end"
+        android:visibility="gone"
+        android:background="#FFF">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/suggestion_recycler_view"
-                android:scrollbars="horizontal"/>
+                android:scrollbars="horizontal" />
 
             <ProgressBar
                 android:layout_width="wrap_content"
