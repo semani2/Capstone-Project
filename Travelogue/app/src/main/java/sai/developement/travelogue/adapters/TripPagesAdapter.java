@@ -6,14 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.fragments.DayFragment;
 import sai.developement.travelogue.fragments.TripDetailsFragment;
 import sai.developement.travelogue.models.Trip;
-import sai.developement.travelogue.models.TripDay;
 
 /**
  * Created by sai on 3/5/17.
@@ -22,35 +23,40 @@ import sai.developement.travelogue.models.TripDay;
 public class TripPagesAdapter extends FragmentStatePagerAdapter {
 
     private final Trip mTrip;
-    private final List<TripDay> mTripDays;
     private final Context mContext;
 
-    public TripPagesAdapter(Trip trip, List<TripDay> tripDays, Context context, FragmentManager fm) {
+    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+
+    public TripPagesAdapter(Trip trip, Context context, FragmentManager fm) {
         super(fm);
         this.mTrip = trip;
-        this.mTripDays = tripDays;
         this.mContext = context;
     }
 
     @Override
     public Fragment getItem(int position) {
         Fragment fragment;
-        Bundle extras = new Bundle();
-        extras.putParcelable(ViewTripActivity.TRIP_KEY, mTrip);
+
         if(position == 0) {
             fragment = new TripDetailsFragment();
+            Bundle extras = new Bundle();
+            extras.putParcelable(ViewTripActivity.TRIP_KEY, mTrip);
+            fragment.setArguments(extras);
         }
         else {
-            fragment = new DayFragment();
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTimeInMillis(mTrip.getStartDateMillis());
+            startCalendar.add(Calendar.DATE, position - 1);
+            fragment = DayFragment.newInstance(position, dateFormatForMonth.format(startCalendar.getTime()), mTrip.getId());
         }
-        fragment.setArguments(extras);
+
         return fragment;
 
     }
 
     @Override
     public int getCount() {
-        return mTrip.getDuration();
+        return mTrip.getDuration() + 1;
     }
 
     @Override

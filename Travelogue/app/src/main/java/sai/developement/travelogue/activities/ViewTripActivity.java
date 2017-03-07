@@ -6,10 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +13,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.TripPagesAdapter;
-import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.TripDay;
 
@@ -55,24 +50,10 @@ public class ViewTripActivity extends AppCompatActivity {
 
         mTrip = getIntent().getExtras().getParcelable(TRIP_KEY);
 
-        mTripPagesAdapter = new TripPagesAdapter(mTrip, mTripDaysList, this, getSupportFragmentManager());
+        mTripPagesAdapter = new TripPagesAdapter(mTrip, this, getSupportFragmentManager());
 
         mViewPager.setAdapter(mTripPagesAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
-
-        FirebaseDatabaseHelper.getItineraryForTrip(mTrip.getId(), new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null && dataSnapshot.getValue()!= null) {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 }

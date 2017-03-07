@@ -75,11 +75,16 @@ public class HomeActivity extends AppCompatActivity {
 
                     FirebaseDatabaseHelper.onLoginComplete(mDatabaseReference, user);
 
+                    mTripsReference = FirebaseDatabaseHelper.getTripsDatabaseReference().
+                            child(mFirebaseAuth.getCurrentUser().getUid());
+                    fetchTrips();
+                    mTripsReference.addChildEventListener(mTripsEventListener);
                     /*Toast.makeText(HomeActivity.this, "You are logged in! Welcome " + currentUser.getDisplayName(),
                             Toast.LENGTH_LONG).show();*/
                 }
                 else {
                     // Show the login screen
+                    mTrips.clear();
                     startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
@@ -103,10 +108,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         initRecyclerView();
-
-        mTripsReference = FirebaseDatabaseHelper.getTripsDatabaseReference().
-                child(mFirebaseAuth.getCurrentUser().getUid());
-        fetchTrips();
     }
 
     private void fetchTrips() {
@@ -179,14 +180,19 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-        mTripsReference.addChildEventListener(mTripsEventListener);
+        mTrips.clear();
+        if(mTripsEventListener != null) {
+            mTripsReference.addChildEventListener(mTripsEventListener);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-        mTripsReference.removeEventListener(mTripsEventListener);
+        if(mTripsEventListener != null) {
+            mTripsReference.removeEventListener(mTripsEventListener);
+        }
         mTrips.clear();
     }
 

@@ -58,7 +58,7 @@ public class TripDetailsFragment extends Fragment {
 
     private TripMatesListAdapter mTripMatesListAdapter;
 
-    private ArrayList<User> mTripMates;
+    private ArrayList<User> mTripMates = new ArrayList<>();
 
     public TripDetailsFragment() {
         // Required empty public constructor
@@ -84,7 +84,9 @@ public class TripDetailsFragment extends Fragment {
             tripNameTextView.setText(mTrip.getName());
             startDateTextView.setText(mTrip.getStartDate());
             endDateTextView.setText(mTrip.getEndDate());
-            mTripMates =  new ArrayList<>(mTrip.getTravellers());
+            if(mTrip.getTravellers() != null) {
+                mTripMates = new ArrayList<>(mTrip.getTravellers());
+            }
 
             mTripMatesListAdapter = new TripMatesListAdapter(getContext(), mTripMates);
             tripmatesListView.setAdapter(mTripMatesListAdapter);

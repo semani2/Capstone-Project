@@ -23,6 +23,7 @@ public class Trip implements Parcelable {
     public int duration;
     public String createdByUsername;
     public String createByUseremail;
+    public long startDateMillis;
 
 
     public Trip() {
@@ -30,7 +31,7 @@ public class Trip implements Parcelable {
     }
 
     public Trip(String id, String name, String startDate, String endDate, List<User> travellers, int duration,
-                String createdByUsername, String createByUseremail) {
+                String createdByUsername, String createByUseremail, long startDateMillis) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -39,6 +40,7 @@ public class Trip implements Parcelable {
         this.duration = duration;
         this.createdByUsername = createdByUsername;
         this.createByUseremail = createByUseremail;
+        this.startDateMillis = startDateMillis;
     }
 
     public String getId() {
@@ -105,6 +107,14 @@ public class Trip implements Parcelable {
         this.createByUseremail = createByUseremail;
     }
 
+    public long getStartDateMillis() {
+        return startDateMillis;
+    }
+
+    public void setStartDateMillis(long startDateMillis) {
+        this.startDateMillis = startDateMillis;
+    }
+
     protected Trip(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -119,6 +129,7 @@ public class Trip implements Parcelable {
         duration = in.readInt();
         createdByUsername = in.readString();
         createByUseremail = in.readString();
+        startDateMillis = in.readLong();
     }
 
     @Override
@@ -141,6 +152,7 @@ public class Trip implements Parcelable {
         dest.writeInt(duration);
         dest.writeString(createdByUsername);
         dest.writeString(createByUseremail);
+        dest.writeLong(startDateMillis);
     }
 
     @SuppressWarnings("unused")

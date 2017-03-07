@@ -24,4 +24,13 @@
     <string name="str_day">Day - %1$s</string>
 
     <string name="str_no_trips">Sorry! No trips for you...</string>
+
+    <!-- Day Fragment Strings -->
+    <string name="str_no_plans_yet">Looks like you have not yet planned anything for today!\n\n Start adding places you want to visit!</string>
+    <string name="str_add">Add</string>
+    <string name="str_clear">Clear</string>
+    <string name="str_trip_day">Trip - Day %1$d</string>
+    <string name="str_city_enter_hint">Enter the city you are visiting</string>
+    <string name="str_place_hint">Tap to select a place</string>
+    <string name="str_time_hint">Enter the time you are planning to visit (ex: 13:30)</string>
 </resources>

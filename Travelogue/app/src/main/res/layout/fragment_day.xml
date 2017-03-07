@@ -4,8 +4,154 @@
     android:layout_height="match_parent"
     tools:context="sai.developement.travelogue.fragments.DayFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/itinerary_layout">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trip_day_text_view"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:gravity="center_horizontal"
+                tools:text="Trip - Day 1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trip_date_text_view"
+                android:textColor="@color/text_secondary"
+                android:textSize="18sp"
+                android:gravity="center_horizontal"
+                tools:text="24 Mar 2017"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/itinerary_recycler_view">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/empty_itinerary_recycler_text_view"
+                android:textSize="20sp"
+                android:textColor="@color/text_secondary"
+                android:text="@string/str_no_plans_yet"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_itinerary_card_view"
+            android:layout_below="@id/itinerary_layout"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/city_edit_text"
+                    tools:text="Raleigh, NC"
+                    android:textSize="20sp"
+                    android:inputType="text"
+                    android:hint="@string/str_city_enter_hint"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/place_edit_text"
+                    android:textSize="18sp"
+                    tools:text="Bell Tower, NC State"
+                    android:inputType="text"
+                    android:hint="@string/str_place_hint"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/from_time_edit_text"
+                    android:layout_weight="0.5"
+                    tools:text="24 March"
+                    android:textSize="20sp"
+                    android:inputType="time"
+                    android:hint="@string/str_time_hint"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/add_itinerary_button"
+                        android:text="@string/str_add"
+                        android:textColor="@color/colorPrimary"
+                        android:padding="10dp"
+                        android:textSize="18sp"
+                        android:textAllCaps="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/clear_itinerary_button"
+                        android:text="@string/str_clear"
+                        android:textColor="@color/colorPrimary"
+                        android:padding="10dp"
+                        android:textSize="18sp"
+                        android:textAllCaps="true"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/itinerary_progress_bar"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Day Fragment"/>
+        android:id="@+id/suggestions_layout"
+        android:layout_gravity="bottom"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/suggestion_recycler_view"
+                android:scrollbars="horizontal"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/suggestions_progress_bar"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </FrameLayout>
 </FrameLayout>
