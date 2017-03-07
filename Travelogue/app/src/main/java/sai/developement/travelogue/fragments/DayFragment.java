@@ -1,6 +1,7 @@
 package sai.developement.travelogue.fragments;
 
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -23,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -180,6 +183,23 @@ public class DayFragment extends Fragment {
             }
         });
 
+        fromTimeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        fromTimeEditText.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("When are you planning to visit?");
+                mTimePicker.show();
+            }
+        });
+
         return view;
     }
 
@@ -253,8 +273,10 @@ public class DayFragment extends Fragment {
                     mTripDayDatabaseReference.addChildEventListener(mTripVisitsChildEventListener);
 
                 }
-                Logger.e("Trip day not created. Creating one now...");
-                // TODO :: Create a trip day here
+                else {
+                    Logger.e("Trip day not created. Creating one now...");
+                    // TODO :: Create a trip day here
+                }
             }
 
             @Override

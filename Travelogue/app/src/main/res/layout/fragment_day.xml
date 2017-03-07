@@ -61,41 +61,49 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/city_edit_text"
                     tools:text="Raleigh, NC"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:inputType="text"
-                    android:hint="@string/str_city_enter_hint"/>
+                    android:hint="@string/str_city_enter_hint"
+                    android:textColorHint="@color/text_secondary"
+                    android:textColor="@color/text_secondary"/>
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/place_edit_text"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     tools:text="Bell Tower, NC State"
                     android:inputType="text"
-                    android:hint="@string/str_place_hint"/>
+                    android:hint="@string/str_place_hint"
+                    android:textColorHint="@color/text_secondary"
+                    android:textColor="@color/text_secondary"
+                    android:focusable="false"/>
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/from_time_edit_text"
-                    android:layout_weight="0.5"
                     tools:text="24 March"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:inputType="time"
-                    android:hint="@string/str_time_hint"/>
+                    android:hint="@string/str_time_hint"
+                    android:textColorHint="@color/text_secondary"
+                    android:textColor="@color/text_secondary"
+                    android:focusable="false"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="end"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -104,7 +112,7 @@
                         android:text="@string/str_add"
                         android:textColor="@color/colorPrimary"
                         android:padding="10dp"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textAllCaps="true"/>
 
                     <TextView
@@ -114,7 +122,7 @@
                         android:text="@string/str_clear"
                         android:textColor="@color/colorPrimary"
                         android:padding="10dp"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textAllCaps="true"/>
 
                 </LinearLayout>

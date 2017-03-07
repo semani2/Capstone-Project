@@ -63,6 +63,7 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -179,8 +180,8 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
         mTrips.clear();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
         if(mTripsEventListener != null) {
             mTripsReference.addChildEventListener(mTripsEventListener);
         }
@@ -189,11 +190,12 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mTrips.clear();
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         if(mTripsEventListener != null) {
             mTripsReference.removeEventListener(mTripsEventListener);
         }
-        mTrips.clear();
+
     }
 
     @Override
