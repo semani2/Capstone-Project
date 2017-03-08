@@ -7,16 +7,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -92,6 +96,9 @@ public class DayFragment extends Fragment {
     @BindView(R.id.clear_itinerary_button)
     TextView clearItineraryButton;
 
+    @BindView(R.id.add_iti_place_image_view)
+    ImageView addItiPlaceImageView;
+
     private int mTripDay;
 
     private String mTripDate = null;
@@ -109,6 +116,8 @@ public class DayFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ItineraryRecyclerAdapter mItineraryRecyclerAdapter;
+
+    private Suggestion mselectedSuggestion = new Suggestion();
     public DayFragment() {
         // Required empty public constructor
     }
@@ -165,13 +174,14 @@ public class DayFragment extends Fragment {
                 tripVisit.setId(GenerateGUIDHelper.generateGUID(GenerateGUIDHelper.Model.TRIP_VISIT));
                 tripVisit.setLocation(locationEditText.getText().toString().trim());
                 tripVisit.setPlace(tripPlaceEditText.getText().toString().trim());
+                tripVisit.setImageUrl(mselectedSuggestion.getPhotoUrl());
                 if(fromTimeEditText.getText().toString() != null && !fromTimeEditText.getText().toString().trim().isEmpty()) {
                     tripVisit.setTripTime(fromTimeEditText.getText().toString().trim());
                 }
 
                 if(tripDay != null) {
                     FirebaseDatabaseHelper.addTripVisitToDay(tripDay.getId(), tripVisit);
-                    clearItiEditTexts();
+                    clearItiEditor();
                 }
 
                 else {
@@ -183,7 +193,7 @@ public class DayFragment extends Fragment {
         clearItineraryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearItiEditTexts();
+                clearItiEditor();
             }
         });
 
@@ -212,11 +222,31 @@ public class DayFragment extends Fragment {
             }
         });
 
+        locationEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.toString() != null && !editable.toString().trim().isEmpty()) {
+                    tripPlaceEditText.setEnabled(true);
+                    fromTimeEditText.setEnabled(true);
+                }
+            }
+        });
+
         return view;
     }
 
     private void showAndLoadSuggestions() {
-        LoadSuggestionsTask task = new LoadSuggestionsTask(getContext(), "Raleigh, NC",
+        LoadSuggestionsTask task = new LoadSuggestionsTask(getContext(), locationEditText.getText().toString().trim(),
                 new LoadSuggestionsTask.ISuggestionsCallback() {
                     @Override
                     public void onSuggestionsLoaded(final List<Suggestion> suggestionList) {
@@ -230,7 +260,7 @@ public class DayFragment extends Fragment {
                                 new RecyclerItemClickListener(getContext(), suggestionsRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                                     @Override public void onItemClick(View view, int position) {
                                         suggestionsLayout.setVisibility(View.GONE);
-                                        tripPlaceEditText.setText(suggestionList.get(position).getName());
+                                        addSuggestionToPlanner(suggestionList.get(position));
                                     }
 
                                     @Override public void onLongItemClick(View view, int position) {
@@ -252,10 +282,21 @@ public class DayFragment extends Fragment {
         task.execute();
     }
 
-    private void clearItiEditTexts() {
+    private void addSuggestionToPlanner(Suggestion suggestion) {
+        mselectedSuggestion = suggestion;
+        Glide.with(getContext())
+                .load(suggestion.getPhotoUrl())
+                .centerCrop()
+                .into(addItiPlaceImageView);
+        tripPlaceEditText.setText(suggestion.getName());
+        addItiPlaceImageView.setVisibility(View.VISIBLE);
+    }
+
+    private void clearItiEditor() {
         locationEditText.setText(null);
         tripPlaceEditText.setText(null);
         fromTimeEditText.setText(null);
+        addItiPlaceImageView.setVisibility(View.GONE);
     }
 
     @Override
