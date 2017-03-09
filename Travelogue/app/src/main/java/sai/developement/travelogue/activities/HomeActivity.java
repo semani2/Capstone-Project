@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.TripsRecyclerAdapter;
+import sai.developement.travelogue.fragments.UserAvatarDialogFragment;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.User;
@@ -56,6 +57,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private ChildEventListener mTripsEventListener;
     private DatabaseReference mTripsReference;
+
+    private static final String USER_AVATAR_DIALOG = "user_avatar_dialog";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,8 @@ public class HomeActivity extends AppCompatActivity {
                             child(mFirebaseAuth.getCurrentUser().getUid());
                     fetchTrips();
                     mTripsReference.addChildEventListener(mTripsEventListener);
+
+                    showAvatarDialog(currentUser.getUid());
                     /*Toast.makeText(HomeActivity.this, "You are logged in! Welcome " + currentUser.getDisplayName(),
                             Toast.LENGTH_LONG).show();*/
                 }
@@ -184,6 +190,11 @@ public class HomeActivity extends AppCompatActivity {
         if(mTripsEventListener != null) {
             mTripsReference.addChildEventListener(mTripsEventListener);
         }
+    }
+
+    private void showAvatarDialog(String userId) {
+        UserAvatarDialogFragment dialogFragment = UserAvatarDialogFragment.newInstance(userId);
+        dialogFragment.show(getSupportFragmentManager(), USER_AVATAR_DIALOG);
     }
 
     @Override

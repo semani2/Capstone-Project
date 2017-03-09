@@ -33,4 +33,12 @@
     <string name="str_city_enter_hint">Enter the city you are visiting</string>
     <string name="str_place_hint">Tap to select a place</string>
     <string name="str_time_hint">Enter the time you are planning to visit (ex: 13:30)</string>
+
+    <!-- Chat Activity Strings -->
+    <string name="str_chat">Chat</string>
+
+    <!-- User Avatar Dialog Strings -->
+    <string name="str_select_avatar">Select Your Avatar</string>
+    <string name="str_save_avatar">Save</string>
+    <string name="str_cancel">Cancel</string>
 </resources>
