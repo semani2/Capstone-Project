@@ -15,6 +15,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.TripPagesAdapter;
+import sai.developement.travelogue.eventhandlers.IEventHandler;
+import sai.developement.travelogue.eventhandlers.ViewTripEventHandler;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.TripDay;
 
@@ -44,7 +46,7 @@ public class ViewTripActivity extends TravelogueActivity {
 
         if(getIntent().getExtras() == null || getIntent().getExtras().getParcelable(TRIP_KEY) == null) {
             // No trip object
-            finish();
+            goHome();
         }
 
         setSupportActionBar(mToolbar);
@@ -61,7 +63,12 @@ public class ViewTripActivity extends TravelogueActivity {
     }
 
     @Override
-    public void onAuthStateChange(@NonNull FirebaseAuth firebaseAuth) {
+    public void onUserLoggedIn(@NonNull FirebaseAuth firebaseAuth) {
 
+    }
+
+    @Override
+    protected IEventHandler createEventHandler() {
+        return new ViewTripEventHandler(this);
     }
 }

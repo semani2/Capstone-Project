@@ -9,6 +9,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.eventhandlers.IEventHandler;
+import sai.developement.travelogue.eventhandlers.NewTripEventHandler;
 import sai.developement.travelogue.fragments.AddNewTripFragment;
 
 public class NewTripActivity extends TravelogueActivity {
@@ -30,8 +32,13 @@ public class NewTripActivity extends TravelogueActivity {
     }
 
     @Override
-    public void onAuthStateChange(@NonNull FirebaseAuth firebaseAuth) {
+    public void onUserLoggedIn(@NonNull FirebaseAuth firebaseAuth) {
 
+    }
+
+    @Override
+    protected IEventHandler createEventHandler() {
+        return new NewTripEventHandler(this);
     }
 
     private void launchAddNewTripFragment() {

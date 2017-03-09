@@ -7,6 +7,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.eventhandlers.ChatEventHandler;
+import sai.developement.travelogue.eventhandlers.IEventHandler;
 
 public class ChatActivity extends TravelogueActivity {
 
@@ -20,7 +22,12 @@ public class ChatActivity extends TravelogueActivity {
     }
 
     @Override
-    public void onAuthStateChange(@NonNull FirebaseAuth firebaseAuth) {
+    public void onUserLoggedIn(@NonNull FirebaseAuth firebaseAuth) {
 
+    }
+
+    @Override
+    protected IEventHandler createEventHandler() {
+        return new ChatEventHandler(this);
     }
 }
