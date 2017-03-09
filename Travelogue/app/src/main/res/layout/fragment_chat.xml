@@ -1,12 +1,64 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="sai.developement.travelogue.fragments.ChatFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:context="sai.developement.travelogue.fragments.ChatFragment"
+        android:orientation="vertical"
+        android:weightSum="10">
 
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/chat_recycler_view"
+            android:scrollbars="none"
+            android:layout_weight="9.75"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/chat_send_message_layout"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:background="#FFF"
+            android:layout_weight="0.26"
+            android:gravity="center_vertical">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:maxLines="4"
+                android:textColor="@color/text_secondary"
+                android:hint="@string/str_say_something"
+                android:id="@+id/chat_message_edit_text"
+                android:layout_weight="0.8"
+                android:layout_marginStart="10dp"/>
+
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@drawable/chat_send_bg"
+                android:src="@drawable/ic_send"
+                android:layout_gravity="center"
+                android:id="@+id/chat_message_send_button"
+                android:layout_weight="0.2"
+                android:enabled="false"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progress_bar_layout"
+        android:visibility="gone"
+        android:gravity="center"
+        android:clickable="true">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>
+

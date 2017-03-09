@@ -36,6 +36,7 @@
 
     <!-- Chat Activity Strings -->
     <string name="str_chat">Chat</string>
+    <string name="str_say_something">Say something&#8230;</string>
 
     <!-- User Avatar Dialog Strings -->
     <string name="str_select_avatar">Select Your Avatar</string>

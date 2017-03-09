@@ -33,7 +33,8 @@
             android:theme="@style/AppTheme.ViewTripActivity" />
 
         <activity android:name=".activities.ChatActivity"
-            android:parentActivityName=".activities.ViewTripActivity" />
+            android:parentActivityName=".activities.ViewTripActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

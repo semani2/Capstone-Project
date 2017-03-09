@@ -9,4 +9,5 @@
 
     <color name="avatar_bg">#FCE4EC</color>
     <color name="white">#FFF</color>
+    <color name="send_disabled">#999</color>
 </resources>

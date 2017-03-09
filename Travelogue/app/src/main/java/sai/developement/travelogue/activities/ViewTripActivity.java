@@ -1,5 +1,6 @@
 package sai.developement.travelogue.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -90,7 +91,12 @@ public class ViewTripActivity extends TravelogueActivity {
     }
 
     private void openChat() {
+        Intent chatIntent = new Intent(this, ChatActivity.class);
+        Bundle extras = new Bundle();
+        extras.putParcelable(ChatActivity.TRIP_KEY, mTrip);
 
+        chatIntent.putExtras(extras);
+        startActivity(chatIntent);
     }
 
     @Override
