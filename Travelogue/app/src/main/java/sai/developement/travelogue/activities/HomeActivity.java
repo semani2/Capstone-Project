@@ -166,6 +166,7 @@ public class HomeActivity extends TravelogueActivity {
     protected void onResume() {
         super.onResume();
         mTrips.clear();
+        mTripsAdapter.notifyDataSetChanged();
         if(mTripsEventListener != null) {
             mTripsReference.addChildEventListener(mTripsEventListener);
         }
@@ -175,6 +176,7 @@ public class HomeActivity extends TravelogueActivity {
     protected void onPause() {
         super.onPause();
         mTrips.clear();
+        mTripsAdapter.notifyDataSetChanged();
         if(mTripsEventListener != null) {
             mTripsReference.removeEventListener(mTripsEventListener);
         }

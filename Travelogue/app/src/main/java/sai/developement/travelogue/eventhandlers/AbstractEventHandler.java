@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import sai.developement.travelogue.CurrentUser;
 import sai.developement.travelogue.activities.TravelogueActivity;
 import sai.developement.travelogue.events.AuthStateChangeEvent;
 import sai.developement.travelogue.events.LogoutEvent;
@@ -71,6 +72,7 @@ public abstract class AbstractEventHandler implements IEventHandler {
     @Subscribe(threadMode = ThreadMode.MAIN)
     @Override
     public void onEventMainThread(LogoutEvent event) {
+        CurrentUser.deleteCurrentUser();
         AuthUI.getInstance().signOut(mActivity);
     }
 

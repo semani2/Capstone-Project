@@ -310,6 +310,8 @@ public class DayFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        mTripVisitList.clear();
+        mItineraryRecyclerAdapter.notifyDataSetChanged();
         loadItinerary();
     }
 
