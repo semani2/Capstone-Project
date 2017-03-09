@@ -49,8 +49,6 @@ public class HomeActivity extends TravelogueActivity {
     private ChildEventListener mTripsEventListener;
     private DatabaseReference mTripsReference;
 
-    private static final String USER_AVATAR_DIALOG = "user_avatar_dialog";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_home);
@@ -172,11 +170,6 @@ public class HomeActivity extends TravelogueActivity {
             mTripsReference.addChildEventListener(mTripsEventListener);
         }
     }
-
-    /*private void showAvatarDialog(String userId) {
-        UserAvatarDialogFragment dialogFragment = UserAvatarDialogFragment.newInstance(userId);
-        dialogFragment.show(getSupportFragmentManager(), USER_AVATAR_DIALOG);
-    }*/
 
     @Override
     protected void onPause() {

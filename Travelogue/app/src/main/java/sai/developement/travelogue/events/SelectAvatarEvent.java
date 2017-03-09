@@ -7,7 +7,9 @@ package sai.developement.travelogue.events;
 /** Launch this event, to launch the user avatar selector dialog **/
 public class SelectAvatarEvent {
 
-    public SelectAvatarEvent(){
+    public final String mUserId;
 
+    public SelectAvatarEvent(String userId){
+        mUserId = userId;
     }
 }
