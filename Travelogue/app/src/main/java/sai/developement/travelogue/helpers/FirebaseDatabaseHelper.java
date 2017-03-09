@@ -13,6 +13,8 @@ import com.orhanobut.logger.Logger;
 import java.util.Iterator;
 
 import sai.developement.travelogue.models.Trip;
+import sai.developement.travelogue.models.TripDay;
+import sai.developement.travelogue.models.TripVisit;
 import sai.developement.travelogue.models.User;
 
 /**
@@ -56,7 +58,7 @@ public class FirebaseDatabaseHelper {
     Trips helper methods
      */
 
-    private static DatabaseReference getTripsDatabaseReference() {
+    public static DatabaseReference getTripsDatabaseReference() {
         return FirebaseDatabase.getInstance()
                 .getReference()
                 .child(FirebaseDatabaseHelper.DB_NODE_TRIPS);
@@ -66,6 +68,18 @@ public class FirebaseDatabaseHelper {
         return FirebaseDatabase.getInstance()
                 .getReference()
                 .child(FirebaseDatabaseHelper.DB_NODE_SHARED_TRIPS);
+    }
+
+    public static DatabaseReference getTripDaysReference() {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(FirebaseDatabaseHelper.DB_NODE_TRIP_DAYS);
+    }
+
+    public static DatabaseReference getTripVisitsReference() {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(DB_NODE_TRIP_VISITS);
     }
 
     public static void addNewTrip(final Trip trip, final OnCompleteListener<Void> finalCompleteListener) {
@@ -107,5 +121,37 @@ public class FirebaseDatabaseHelper {
         }
     }
 
+    public static void addTripDayForTrip(Trip trip, TripDay tripDay) {
+        Logger.d("Adding trip day " + tripDay.getId() + " , for trip : " + trip.getId());
+
+        DatabaseReference tripDayReference = getTripDaysReference();
+        tripDayReference.child(trip.getId())
+                .child(tripDay.getId())
+                .setValue(tripDay);
+    }
+
+    public static void getTripDay(String tripId, String date, ValueEventListener valueEventListener) {
+        Logger.d("Fetching Trip day on date : "+ date+ " , for trip :" + tripId);
+
+        DatabaseReference tripDaysReference = getTripDaysReference();
+        tripDaysReference.child(tripId)
+                .orderByChild("date")
+                .equalTo(date)
+                .addListenerForSingleValueEvent(valueEventListener);
+
+    }
+
+    public static void getItineraryForTrip(String tripId, ValueEventListener valueEventListener) {
+        DatabaseReference tripDaysReference = getTripDaysReference();
+        tripDaysReference.child(tripId)
+                .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void addTripVisitToDay(String tripDayId, TripVisit tripVisit) {
+        DatabaseReference databaseReference = getTripVisitsReference();
+        databaseReference.child(tripDayId)
+                .child(tripVisit.getId())
+                .setValue(tripVisit);
+    }
 
 }

@@ -4,6 +4,7 @@ package sai.developement.travelogue.fragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -44,10 +45,12 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.adapters.TripMatesListAdapter;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.GenerateGUIDHelper;
 import sai.developement.travelogue.models.Trip;
+import sai.developement.travelogue.models.TripDay;
 import sai.developement.travelogue.models.User;
 
 /**
@@ -96,7 +99,7 @@ public class AddNewTripFragment extends Fragment {
 
     private ArrayList<User> travelMatesList = new ArrayList<>();
 
-    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.US);
 
     private static final String TRIP_NAME_KEY = "trip_name";
     private static final String TRIP_START_DATE_KEY = "trip_start_date";
@@ -194,7 +197,7 @@ public class AddNewTripFragment extends Fragment {
 
             String startDate = dateFormatForMonth.format(startCalendar.getTime());
             String endDate = dateFormatForMonth.format(endCalendar.getTime());
-            long duration = TimeUnit.MILLISECONDS.toDays(Math.abs(endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()));
+            int duration = (int)TimeUnit.MILLISECONDS.toDays(Math.abs(endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()));
 
             String tripName = tripNameEditText.getText().toString().trim();
 
@@ -203,8 +206,9 @@ public class AddNewTripFragment extends Fragment {
             trip.setName(tripName);
             trip.setStartDate(startDate);
             trip.setEndDate(endDate);
-            trip.setDuration(duration);
+            trip.setDuration(duration + 1);
             trip.setTravellers(travelMatesList);
+            trip.setStartDateMillis(startCalendar.getTimeInMillis());
             if(FirebaseAuth.getInstance().getCurrentUser() != null) {
                 trip.setCreatedByUsername(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
                 trip.setCreateByUseremail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -213,17 +217,44 @@ public class AddNewTripFragment extends Fragment {
             FirebaseDatabaseHelper.addNewTrip(trip, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    toggleProgressBar(false);
+
                     if(task.isSuccessful()) {
+                        // Create the trip day objects with the required dates
+                        addTripDays(trip);
                         Logger.d("New trip created successfully : " +trip.getId());
+                        toggleProgressBar(false);
                         Toast.makeText(getContext(), getString(R.string.str_new_trip_created, trip.getName()), Toast.LENGTH_LONG).show();
+                        goToViewActivity(trip);
                     }
                     else {
+                        toggleProgressBar(false);
                         Logger.e("Error creating new trip", task.getException());
                     }
                 }
             });
         }
+    }
+
+    private void addTripDays(Trip trip) {
+        for(int i = 0; i<trip.getDuration();i++){
+            Calendar date = startCalendar;
+            String tripDayId = GenerateGUIDHelper.generateGUID(GenerateGUIDHelper.Model.TRIP_DAY);
+            TripDay tripDay = new TripDay();
+            tripDay.setId(tripDayId);
+            date.add(Calendar.DATE, i);
+            tripDay.setDate(dateFormatForMonth.format(date.getTime()));
+
+            FirebaseDatabaseHelper.addTripDayForTrip(trip, tripDay);
+        }
+    }
+
+    private void goToViewActivity(Trip trip) {
+        Intent viewIntent = new Intent(getActivity(), ViewTripActivity.class);
+        Bundle extras = new Bundle();
+        extras.putParcelable(ViewTripActivity.TRIP_KEY, trip);
+        viewIntent.putExtras(extras);
+        startActivity(viewIntent);
+        getActivity().finish();
     }
 
     private boolean validateInput(EditText... editTexts) {

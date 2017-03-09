@@ -13,17 +13,31 @@ public class TripVisit {
     public String tripTime;
     // Will store the place the travellers are visiting in the above time frame, ex: Taj Mahal
     public String place;
+    //Will store the location- city, country the travllers are visiting.
+    public String location;
     // URL to render image of the place the travllers are visiting
     public String imageUrl;
+    // ID
+    public String id;
 
     public TripVisit() {
 
     }
 
-    public TripVisit(String tripTime, String place, String imageUrl) {
+    public TripVisit(String id, String tripTime, String place, String location,String imageUrl) {
+        this.id = id;
         this.tripTime = tripTime;
         this.place = place;
         this.imageUrl = imageUrl;
+        this.location = location;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTripTime() {
@@ -48,5 +62,13 @@ public class TripVisit {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

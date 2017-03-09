@@ -11,20 +11,15 @@ public class TripDay {
 
     public String id;
     public String date;
-    public String location;
 
-    // Stores the ID of the parent trip
-    public String tripId;
 
     public TripDay() {
 
     }
 
-    public TripDay(String id, String date, String location, String tripId) {
+    public TripDay(String id, String date) {
         this.id = id;
         this.date = date;
-        this.location = location;
-        this.tripId = tripId;
     }
 
     public String getId() {
@@ -41,21 +36,5 @@ public class TripDay {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
     }
 }
