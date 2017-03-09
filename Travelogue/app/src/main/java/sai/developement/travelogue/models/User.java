@@ -7,28 +7,21 @@ import android.os.Parcelable;
  * Created by sai on 2/28/17.
  */
 
-public class User implements Parcelable{
+public class User implements Parcelable {
     public String id;
     public String name;
     public String email;
+    public int avatarId;
 
     public User() {
 
     }
 
-    public User(String id, String name, String email) {
+    public User(String id, String name, String email, int avatarId) {
         this.id = id;
         this.name = name;
         this.email = email;
-    }
-
-    public User(Parcel in) {
-        String[] data = new String[3];
-
-        in.readStringArray(data);
-        this.id = data[0];
-        this.name = data[1];
-        this.email = data[2];
+        this.avatarId = avatarId;
     }
 
     public String getId() {
@@ -55,23 +48,42 @@ public class User implements Parcelable{
         this.email = email;
     }
 
+    public int getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(int avatarId) {
+        this.avatarId = avatarId;
+    }
+
+    protected User(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        email = in.readString();
+        avatarId = in.readInt();
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeStringArray(new String[] {this.id,
-                this.name,
-                this.email});
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeInt(avatarId);
     }
 
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
         public User createFromParcel(Parcel in) {
             return new User(in);
         }
 
+        @Override
         public User[] newArray(int size) {
             return new User[size];
         }

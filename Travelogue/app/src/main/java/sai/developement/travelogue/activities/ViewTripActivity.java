@@ -1,10 +1,12 @@
 package sai.developement.travelogue.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ import sai.developement.travelogue.adapters.TripPagesAdapter;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.TripDay;
 
-public class ViewTripActivity extends AppCompatActivity {
+public class ViewTripActivity extends TravelogueActivity {
 
     public static final String TRIP_KEY = "trip_key";
 
@@ -37,7 +39,6 @@ public class ViewTripActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_trip);
         ButterKnife.bind(this);
 
@@ -48,6 +49,8 @@ public class ViewTripActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
+        super.onCreate(savedInstanceState);
+
         mTrip = getIntent().getExtras().getParcelable(TRIP_KEY);
 
         mTripPagesAdapter = new TripPagesAdapter(mTrip, this, getSupportFragmentManager());
@@ -55,5 +58,10 @@ public class ViewTripActivity extends AppCompatActivity {
         mViewPager.setAdapter(mTripPagesAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    public void onAuthStateChange(@NonNull FirebaseAuth firebaseAuth) {
+
     }
 }

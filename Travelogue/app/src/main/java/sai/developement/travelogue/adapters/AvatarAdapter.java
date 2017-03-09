@@ -38,20 +38,27 @@ public class AvatarAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        View view = null;
+        View view = convertView;
+        ViewHolder viewHolder;
 
-        ImageView avatarImageView;
+        if(view == null) {
+            LayoutInflater inflater = (LayoutInflater) mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.avatar_item_layout, null);
+            viewHolder = new ViewHolder();
+            viewHolder.avatarImageView = (ImageView) view.findViewById(R.id.avatar_image_view);
 
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ViewHolder) view.getTag();
+        }
 
-        view = inflater.inflate(R.layout.avatar_item_layout, null);
-        avatarImageView = (ImageView) view.findViewById(R.id.avatar_image_view);
-        /*Glide.with(mContext)
-                .load()
-                .centerCrop()
-                .into(avatarImageView);*/
-        avatarImageView.setImageResource(Constants.AVATARS.get(position + 1));
+        viewHolder.avatarImageView.setImageResource(Constants.AVATARS.get(position + 1));
         return view;
+    }
+
+    private static class ViewHolder {
+        ImageView avatarImageView;
     }
 }

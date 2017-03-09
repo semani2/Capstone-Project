@@ -89,7 +89,7 @@ public class UserAvatarDialogFragment extends DialogFragment {
                 cardView.setCardBackgroundColor(getResources().getColor(R.color.avatar_bg));
 
                 saveAvatarLayout.setVisibility(View.VISIBLE);
-                //avatarGridView.setEnabled(false);
+                avatarGridView.setEnabled(false);
 
                 saveAvatarButton.setOnClickListener(new View.OnClickListener() {
                     @Override

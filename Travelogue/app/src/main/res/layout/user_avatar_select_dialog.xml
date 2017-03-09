@@ -47,13 +47,13 @@
         android:layout_height="75dp"
         android:id="@+id/save_avatar_layout"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="5dp"
-        android:visibility="gone">
+        android:gravity="top|center"
+        android:paddingTop="5dp"
+        android:visibility="visible">
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:text="@string/str_save_avatar"
             android:layout_marginEnd="5dp"
             android:background="@color/colorPrimary"
@@ -64,7 +64,7 @@
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:text="@string/str_cancel"
             android:layout_marginEnd="5dp"
             android:background="#bbb"

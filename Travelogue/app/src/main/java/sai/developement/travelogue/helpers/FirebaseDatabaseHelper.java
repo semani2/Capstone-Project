@@ -39,7 +39,15 @@ public class FirebaseDatabaseHelper {
     }
 
     public static void onLoginComplete(DatabaseReference mDatabase, User user) {
-        mDatabase.child(DB_NODE_USERS).child(user.getId()).setValue(user);
+        mDatabase.child(DB_NODE_USERS).child(user.getId()).setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()) {
+                            // Check is user has
+                        }
+                    }
+                });
     }
 
     /*

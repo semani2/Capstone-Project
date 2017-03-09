@@ -1,15 +1,26 @@
 package sai.developement.travelogue.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends TravelogueActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        ButterKnife.bind(this);
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAuthStateChange(@NonNull FirebaseAuth firebaseAuth) {
+
     }
 }

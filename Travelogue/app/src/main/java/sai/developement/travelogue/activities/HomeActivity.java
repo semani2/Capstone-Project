@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -29,17 +28,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.TripsRecyclerAdapter;
-import sai.developement.travelogue.fragments.UserAvatarDialogFragment;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.User;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends TravelogueActivity {
 
     private static final int AUTH_REQ_CODE = 1001;
 
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
     private DatabaseReference mDatabaseReference;
 
     @BindView(R.id.fab)
@@ -62,47 +58,12 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        super.onCreate(savedInstanceState);
+
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                if(null != currentUser) {
-                    // Add the user to Firebase if not yet added
-                    User user = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail());
-
-                    FirebaseDatabaseHelper.onLoginComplete(mDatabaseReference, user);
-
-                    mTripsReference = FirebaseDatabaseHelper.getTripsDatabaseReference().
-                            child(mFirebaseAuth.getCurrentUser().getUid());
-                    fetchTrips();
-                    mTripsReference.addChildEventListener(mTripsEventListener);
-
-                    showAvatarDialog(currentUser.getUid());
-                    /*Toast.makeText(HomeActivity.this, "You are logged in! Welcome " + currentUser.getDisplayName(),
-                            Toast.LENGTH_LONG).show();*/
-                }
-                else {
-                    // Show the login screen
-                    mTrips.clear();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-                                    .setIsSmartLockEnabled(false)
-                                    .setTheme(R.style.AppTheme_LoginActivity)
-                                    .build(),
-                            AUTH_REQ_CODE);
-                }
-            }
-        };
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +75,42 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         initRecyclerView();
+    }
+
+    @Override
+    public void onAuthStateChange(@NonNull FirebaseAuth firebaseAuth) {
+        final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(null != currentUser) {
+            // Add the user to Firebase if not yet added
+            User user = new User();
+            user.setId(currentUser.getUid());
+            user.setName(currentUser.getDisplayName());
+            user.setEmail(currentUser.getEmail());
+
+            FirebaseDatabaseHelper.onLoginComplete(mDatabaseReference, user);
+
+            mTripsReference = FirebaseDatabaseHelper.getTripsDatabaseReference().
+                    child(mFirebaseAuth.getCurrentUser().getUid());
+            fetchTrips();
+            mTripsReference.addChildEventListener(mTripsEventListener);
+
+            //showAvatarDialog(currentUser.getUid());
+                    /*Toast.makeText(HomeActivity.this, "You are logged in! Welcome " + currentUser.getDisplayName(),
+                            Toast.LENGTH_LONG).show();*/
+        }
+        else {
+            // Show the login screen
+            mTrips.clear();
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                            .setIsSmartLockEnabled(false)
+                            .setTheme(R.style.AppTheme_LoginActivity)
+                            .build(),
+                    AUTH_REQ_CODE);
+        }
     }
 
     private void fetchTrips() {
@@ -186,22 +183,20 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mTrips.clear();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
         if(mTripsEventListener != null) {
             mTripsReference.addChildEventListener(mTripsEventListener);
         }
     }
 
-    private void showAvatarDialog(String userId) {
+    /*private void showAvatarDialog(String userId) {
         UserAvatarDialogFragment dialogFragment = UserAvatarDialogFragment.newInstance(userId);
         dialogFragment.show(getSupportFragmentManager(), USER_AVATAR_DIALOG);
-    }
+    }*/
 
     @Override
     protected void onPause() {
         super.onPause();
         mTrips.clear();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         if(mTripsEventListener != null) {
             mTripsReference.removeEventListener(mTripsEventListener);
         }

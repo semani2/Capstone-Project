@@ -1,7 +1,6 @@
 package sai.developement.travelogue.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Random;
 
+import sai.developement.travelogue.Constants;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.models.User;
 
@@ -34,9 +33,9 @@ public class TripMatesListAdapter extends ArrayAdapter<User> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        User user =  getItem(position);
+        User user = getItem(position);
 
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.trip_mates_list_item, parent, false);
         }
 
@@ -44,16 +43,11 @@ public class TripMatesListAdapter extends ArrayAdapter<User> {
         TextView userNameTextView = (TextView) convertView.findViewById(R.id.user_name_text_view);
         TextView userEmailTextView = (TextView) convertView.findViewById(R.id.user_email_text_view);
         Glide.with(mContext)
-                .load(Uri.parse("https://randomuser.me/api/portraits/lego/"+getRandomImageId()+".jpg"))
+                .load(Constants.AVATARS.get(user.getAvatarId()))
                 .into(profileImageView);
         userNameTextView.setText(user.getName());
         userEmailTextView.setText(user.getEmail());
 
         return convertView;
-    }
-
-    private int getRandomImageId() {
-        Random random = new Random();
-        return random.nextInt(8) + 1;
     }
 }
