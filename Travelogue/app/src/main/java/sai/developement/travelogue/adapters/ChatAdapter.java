@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import sai.developement.travelogue.Constants;
@@ -36,11 +38,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == MESSAGE_SELF) {
-            View normalView = LayoutInflater.from(mContext).inflate(R.layout.chat_message_self, null);
-            return new ChatSelfViewHolder(normalView);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.chat_message_self, parent, false);
+            return new ChatSelfViewHolder(view);
         } else {
-            View headerRow = LayoutInflater.from(mContext).inflate(R.layout.chat_message_other, null);
-            return new ChatOtherViewHolder(headerRow);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.chat_message_other, parent, false);
+            return new ChatOtherViewHolder(view);
         }
     }
 
@@ -50,13 +54,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if(itemType == MESSAGE_SELF) {
             ChatSelfViewHolder viewHolder = (ChatSelfViewHolder)holder;
-            viewHolder.mAvatarImageView.setImageResource(Constants.AVATARS.get(CurrentUser.getCurrentuser().getUserAvatarId()));
+            Glide.with(mContext)
+                    .load(Constants.AVATARS.get(CurrentUser.getCurrentuser().getUserAvatarId()))
+                    .centerCrop()
+                    .into(viewHolder.mAvatarImageView);
             viewHolder.mMsgTextView.setText(mTripMessages.get(position).getMessage());
             viewHolder.mMsgSentTextView.setText(mTripMessages.get(position).getSentTime());
         }
         else {
             ChatOtherViewHolder viewHolder = (ChatOtherViewHolder) holder;
-            viewHolder.mAvatarImageView.setImageResource(Constants.AVATARS.get(mTripMessages.get(position).getUserAvatarId()));
+            Glide.with(mContext)
+                    .load(Constants.AVATARS.get(CurrentUser.getCurrentuser().getUserAvatarId()))
+                    .centerCrop()
+                    .into(viewHolder.mAvatarImageView);
             viewHolder.mMsgTextView.setText(mTripMessages.get(position).getMessage());
             viewHolder.mMsgSentTextView.setText(mTripMessages.get(position).getSentTime());
         }
@@ -87,6 +97,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mMsgTextView = (TextView) v.findViewById(R.id.message_text_view);
             mMsgSentTextView = (TextView) v.findViewById(R.id.message_time_text_view);
             mAvatarImageView = (ImageView) v.findViewById(R.id.message_avatar_image_view);
+            mMsgCardView = (CardView) v.findViewById(R.id.chat_message_card_view);
         }
     }
 
@@ -94,12 +105,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public TextView mMsgTextView;
         public TextView mMsgSentTextView;
         public ImageView mAvatarImageView;
+        public CardView mMsgCardView;
 
         public ChatSelfViewHolder(View v) {
             super(v);
             mMsgTextView = (TextView) v.findViewById(R.id.message_text_view);
             mMsgSentTextView = (TextView) v.findViewById(R.id.message_time_text_view);
             mAvatarImageView = (ImageView) v.findViewById(R.id.message_avatar_image_view);
+            mMsgCardView = (CardView) v.findViewById(R.id.chat_message_card_view);
         }
     }
 }
