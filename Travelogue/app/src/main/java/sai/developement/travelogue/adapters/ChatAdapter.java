@@ -56,7 +56,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ChatSelfViewHolder viewHolder = (ChatSelfViewHolder)holder;
             Glide.with(mContext)
                     .load(Constants.AVATARS.get(CurrentUser.getCurrentuser().getUserAvatarId()))
-                    .centerCrop()
                     .into(viewHolder.mAvatarImageView);
             viewHolder.mMsgTextView.setText(mTripMessages.get(position).getMessage());
             viewHolder.mMsgSentTextView.setText(mTripMessages.get(position).getSentTime());
@@ -64,8 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         else {
             ChatOtherViewHolder viewHolder = (ChatOtherViewHolder) holder;
             Glide.with(mContext)
-                    .load(Constants.AVATARS.get(CurrentUser.getCurrentuser().getUserAvatarId()))
-                    .centerCrop()
+                    .load(Constants.AVATARS.get(mTripMessages.get(position).getUserAvatarId()))
                     .into(viewHolder.mAvatarImageView);
             viewHolder.mMsgTextView.setText(mTripMessages.get(position).getMessage());
             viewHolder.mMsgSentTextView.setText(mTripMessages.get(position).getSentTime());

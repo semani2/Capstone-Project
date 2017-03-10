@@ -14,6 +14,7 @@ import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import sai.developement.travelogue.CurrentUser;
@@ -95,7 +96,7 @@ public class FirebaseDatabaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Logger.d("Checking for users avatar");
                 setCurrentUser(user);
-                if(dataSnapshot != null || dataSnapshot.getValue() != null) {
+                if(dataSnapshot != null && dataSnapshot.getValue() != null) {
                     if(0 == (Long) dataSnapshot.getValue()) {
                         EventBus.getDefault().post(new SelectAvatarEvent(user.getId()));
                         Logger.d("User does not have avatar, throwing avatar select event");
@@ -162,6 +163,12 @@ public class FirebaseDatabaseHelper {
                 .child(DB_NODE_TRIP_VISITS);
     }
 
+    public static DatabaseReference getSharedTripsReference() {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(DB_NODE_SHARED_TRIPS);
+    }
+
     public static void addNewTrip(final Trip trip, final OnCompleteListener<Void> finalCompleteListener) {
         String userId = getCurrentUserId();
         if(userId != null) {
@@ -190,15 +197,39 @@ public class FirebaseDatabaseHelper {
 
     public static void addAllSharedTrips(Trip trip) {
         Logger.d("Adding travel mates to the trip :" + trip.getName());
+
+        //Before adding the shared trips add the current user as part of the travel mates, so that the the travel mates know
+        ArrayList<User> travelMates = new ArrayList<>(trip.getTravellers());
+        CurrentUser currentUser = CurrentUser.getCurrentuser();
+        User cUser = new User();
+        cUser.setName(currentUser.getUserName());
+        cUser.setEmail(currentUser.getUserEmail());
+        cUser.setId(currentUser.getUserId());
+        cUser.setAvatarId(currentUser.getUserAvatarId());
+        travelMates.add(cUser);
+
+        trip.setTravellers(travelMates);
+
         Iterator<User> iterator = trip.getTravellers().iterator();
 
         while(iterator.hasNext()) {
             User user = iterator.next();
+            if(user.getId().equalsIgnoreCase(cUser.getId())) {
+                continue;
+            }
             getSharedTripsDatabaseReference().child(user.getId())
                     .child(trip.getId())
                     .setValue(trip);
             Logger.d("Travel mate to trip : " +trip.getName() + ", User : " +user.getEmail());
         }
+    }
+
+    public static void addSharedTrip(String userId, Trip trip) {
+        Logger.d("Adding a shared trip to the user");
+
+        getSharedTripsDatabaseReference().child(userId)
+                .child(trip.getId())
+                .setValue(trip);
     }
 
     public static void addTripDayForTrip(Trip trip, TripDay tripDay) {
