@@ -44,4 +44,8 @@
     <string name="str_cancel">Cancel</string>
     <string name="str_avatar_saved">Yay! Your avatar has been saved.</string>
     <string name="str_avatar_save_failed">Oops! We could not save your avatar. Please try again!</string>
+
+    <!-- Home Activity Strings -->
+    <string name="str_my_trips">My Trips</string>
+    <string name="str_shared_trips">Shared Trips</string>
 </resources>
