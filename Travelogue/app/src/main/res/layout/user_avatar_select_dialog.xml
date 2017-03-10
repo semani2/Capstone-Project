@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:weightSum="5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"
+                android:text="@string/str_select_avatar"
+                android:textColor="@color/text_primary"
+                android:id="@+id/avatar_title_text_view"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_clear"
+                android:padding="5dp"
+                android:id="@+id/dialog_close_button"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:id="@+id/avatar_grid_view"
+            android:columnWidth="120dp"
+            android:numColumns="auto_fit"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:verticalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:layout_weight="4"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:id="@+id/save_avatar_layout"
+            android:orientation="horizontal"
+            android:gravity="top|center"
+            android:paddingTop="5dp"
+            android:visibility="gone">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/str_save_avatar"
+                android:layout_marginEnd="5dp"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFF"
+                android:textSize="16sp"
+                android:id="@+id/save_avatar_button"
+                android:gravity="center"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/str_cancel"
+                android:layout_marginEnd="5dp"
+                android:background="#bbb"
+                android:textColor="#FFF"
+                android:layout_marginStart="15dp"
+                android:textSize="16sp"
+                android:id="@+id/cancel_avatar_button"
+                android:gravity="center"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progress_bar_layout"
+        android:visibility="gone"
+        android:gravity="center"
+        android:clickable="true">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

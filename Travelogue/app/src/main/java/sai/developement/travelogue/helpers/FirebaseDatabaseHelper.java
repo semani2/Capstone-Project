@@ -5,13 +5,20 @@ import android.support.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.logger.Logger;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 
+import sai.developement.travelogue.CurrentUser;
+import sai.developement.travelogue.events.SelectAvatarEvent;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.TripDay;
 import sai.developement.travelogue.models.TripVisit;
@@ -38,8 +45,36 @@ public class FirebaseDatabaseHelper {
         return null;
     }
 
-    public static void onLoginComplete(DatabaseReference mDatabase, User user) {
-        mDatabase.child(DB_NODE_USERS).child(user.getId()).setValue(user);
+    public static void onLoginComplete(DatabaseReference mDatabase, final User user) {
+        //Check if user is already in the db if yes, leave him alone and check for avatar, else add the user
+        Logger.d("Login Complete for User: " + user.getName());
+        final DatabaseReference usersDatabaseReference = getUsersDatabaseReference();
+        usersDatabaseReference.child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    // User already exists
+                    Logger.d("User " + user.getName() + " already exists in the DB");
+                    checkUserHasAvatar(user);
+                } else {
+                    usersDatabaseReference.child(user.getId()).setValue(user)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        // Check is user has avatar if not send out AvatarSelectEvent
+                                        checkUserHasAvatar(user);
+                                    }
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Logger.e("Checking for user in Firebase cancelled " + databaseError.getMessage());
+            }
+        });
     }
 
     /*
@@ -52,6 +87,52 @@ public class FirebaseDatabaseHelper {
     public static void getUserByEmail(String email, ValueEventListener valueEventListener) {
         DatabaseReference usersReference = getUsersDatabaseReference();
         usersReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    private static void checkUserHasAvatar(final User user) {
+        DatabaseReference userReference = getUsersDatabaseReference();
+        userReference.child(user.getId()).child("avatarId").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Logger.d("Checking for users avatar");
+                setCurrentUser(user);
+                if(dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    if(0 == (Long) dataSnapshot.getValue()) {
+                        EventBus.getDefault().post(new SelectAvatarEvent(user.getId()));
+                        Logger.d("User does not have avatar, throwing avatar select event");
+                    }
+                    else {
+                        Logger.d("User already has avatar");
+                        CurrentUser.setCurrentUserAvatarId(((Long) dataSnapshot.getValue()).intValue());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Logger.e("Checking for user's avatar cancelled " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private static void setCurrentUser(User user) {
+        CurrentUser.setCurrentUser(user.getId(), user.getName(), user.getEmail());
+    }
+
+    public static void saveUserAvatar(String userId, final int avatarId, final OnCompleteListener onCompleteListener) {
+        DatabaseReference userReference = getUsersDatabaseReference();
+        userReference.child(userId)
+                .child("avatarId")
+                .setValue(avatarId)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()) {
+                            CurrentUser.setCurrentUserAvatarId(avatarId);
+                        }
+                        onCompleteListener.onComplete(task);
+                    }
+                });
     }
 
     /*
@@ -82,6 +163,12 @@ public class FirebaseDatabaseHelper {
                 .child(DB_NODE_TRIP_VISITS);
     }
 
+    public static DatabaseReference getSharedTripsReference() {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(DB_NODE_SHARED_TRIPS);
+    }
+
     public static void addNewTrip(final Trip trip, final OnCompleteListener<Void> finalCompleteListener) {
         String userId = getCurrentUserId();
         if(userId != null) {
@@ -110,15 +197,39 @@ public class FirebaseDatabaseHelper {
 
     public static void addAllSharedTrips(Trip trip) {
         Logger.d("Adding travel mates to the trip :" + trip.getName());
+
+        //Before adding the shared trips add the current user as part of the travel mates, so that the the travel mates know
+        ArrayList<User> travelMates = new ArrayList<>(trip.getTravellers());
+        CurrentUser currentUser = CurrentUser.getCurrentuser();
+        User cUser = new User();
+        cUser.setName(currentUser.getUserName());
+        cUser.setEmail(currentUser.getUserEmail());
+        cUser.setId(currentUser.getUserId());
+        cUser.setAvatarId(currentUser.getUserAvatarId());
+        travelMates.add(cUser);
+
+        trip.setTravellers(travelMates);
+
         Iterator<User> iterator = trip.getTravellers().iterator();
 
         while(iterator.hasNext()) {
             User user = iterator.next();
+            if(user.getId().equalsIgnoreCase(cUser.getId())) {
+                continue;
+            }
             getSharedTripsDatabaseReference().child(user.getId())
                     .child(trip.getId())
                     .setValue(trip);
             Logger.d("Travel mate to trip : " +trip.getName() + ", User : " +user.getEmail());
         }
+    }
+
+    public static void addSharedTrip(String userId, Trip trip) {
+        Logger.d("Adding a shared trip to the user");
+
+        getSharedTripsDatabaseReference().child(userId)
+                .child(trip.getId())
+                .setValue(trip);
     }
 
     public static void addTripDayForTrip(Trip trip, TripDay tripDay) {
@@ -152,6 +263,14 @@ public class FirebaseDatabaseHelper {
         databaseReference.child(tripDayId)
                 .child(tripVisit.getId())
                 .setValue(tripVisit);
+    }
+
+    /* Chat Helper methods */
+    public static DatabaseReference getChatDatabaseReference(String tripId) {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(DB_NODE_MESSAGES)
+                .child(tripId);
     }
 
 }

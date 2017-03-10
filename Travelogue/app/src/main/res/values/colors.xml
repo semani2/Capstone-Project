@@ -6,4 +6,8 @@
 
     <color name="text_primary">#555555</color>
     <color name="text_secondary">#757575</color>
+
+    <color name="avatar_bg">#FCE4EC</color>
+    <color name="white">#FFF</color>
+    <color name="send_disabled">#999</color>
 </resources>

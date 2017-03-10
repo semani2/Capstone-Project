@@ -1,15 +1,19 @@
 package sai.developement.travelogue.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 import android.widget.FrameLayout;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.eventhandlers.IEventHandler;
+import sai.developement.travelogue.eventhandlers.NewTripEventHandler;
 import sai.developement.travelogue.fragments.AddNewTripFragment;
 
-public class NewTripActivity extends AppCompatActivity {
+public class NewTripActivity extends TravelogueActivity {
 
     @BindView(R.id.new_trip_fragment_container)
     FrameLayout fragmentContainer;
@@ -18,12 +22,23 @@ public class NewTripActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_trip);
 
         ButterKnife.bind(this);
 
+        super.onCreate(savedInstanceState);
+
         launchAddNewTripFragment();
+    }
+
+    @Override
+    public void onUserLoggedIn(@NonNull FirebaseAuth firebaseAuth) {
+
+    }
+
+    @Override
+    protected IEventHandler createEventHandler() {
+        return new NewTripEventHandler(this);
     }
 
     private void launchAddNewTripFragment() {

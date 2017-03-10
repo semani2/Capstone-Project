@@ -293,6 +293,7 @@ public class AddNewTripFragment extends Fragment {
                                 user.setEmail((String) ((HashMap) pair.getValue()).get("email"));
                                 user.setId((String) ((HashMap) pair.getValue()).get("id"));
                                 user.setName((String) ((HashMap) pair.getValue()).get("name"));
+                                user.setAvatarId(((Long)  ((HashMap) pair.getValue()).get("avatarId")).intValue());
                                 break;
                             }
 
