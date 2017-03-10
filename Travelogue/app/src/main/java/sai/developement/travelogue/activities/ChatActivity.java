@@ -2,6 +2,7 @@ package sai.developement.travelogue.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -47,6 +48,16 @@ public class ChatActivity extends TravelogueActivity {
     @Override
     public void onUserLoggedIn(@NonNull FirebaseAuth firebaseAuth) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     @Override
