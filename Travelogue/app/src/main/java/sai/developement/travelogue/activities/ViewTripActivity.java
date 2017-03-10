@@ -12,9 +12,6 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
@@ -22,7 +19,6 @@ import sai.developement.travelogue.adapters.TripPagesAdapter;
 import sai.developement.travelogue.eventhandlers.IEventHandler;
 import sai.developement.travelogue.eventhandlers.ViewTripEventHandler;
 import sai.developement.travelogue.models.Trip;
-import sai.developement.travelogue.models.TripDay;
 
 public class ViewTripActivity extends TravelogueActivity {
 
@@ -38,8 +34,6 @@ public class ViewTripActivity extends TravelogueActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    private List<TripDay> mTripDaysList = new ArrayList<>();
 
     private Trip mTrip = null;
 
