@@ -5,6 +5,8 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -40,7 +42,7 @@ import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.ItineraryRecyclerAdapter;
 import sai.developement.travelogue.adapters.SuggestionsAdapter;
-import sai.developement.travelogue.asynctasks.LoadSuggestionsTask;
+import sai.developement.travelogue.asynctasks.LoadSuggestionTaskLoader;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.GenerateGUIDHelper;
 import sai.developement.travelogue.listeners.RecyclerItemClickListener;
@@ -51,7 +53,7 @@ import sai.developement.travelogue.models.TripVisit;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DayFragment extends Fragment {
+public class DayFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Suggestion>>{
 
     private static final String DAY_KEY = "trip_day";
     private static final String DATE_KEY = "trip_date";
@@ -118,6 +120,10 @@ public class DayFragment extends Fragment {
     private ItineraryRecyclerAdapter mItineraryRecyclerAdapter;
 
     private Suggestion mselectedSuggestion = new Suggestion();
+
+    private static final int SUGGESTIONS_LOADER = 1;
+
+
     public DayFragment() {
         // Required empty public constructor
     }
@@ -218,7 +224,8 @@ public class DayFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 toggleItineraryProgress(true);
-                showAndLoadSuggestions();
+                getActivity().getSupportLoaderManager().destroyLoader(SUGGESTIONS_LOADER);
+                getActivity().getSupportLoaderManager().initLoader(SUGGESTIONS_LOADER, null, DayFragment.this).forceLoad();
             }
         });
 
@@ -245,41 +252,36 @@ public class DayFragment extends Fragment {
         return view;
     }
 
-    private void showAndLoadSuggestions() {
-        LoadSuggestionsTask task = new LoadSuggestionsTask(getContext(), locationEditText.getText().toString().trim(),
-                new LoadSuggestionsTask.ISuggestionsCallback() {
-                    @Override
-                    public void onSuggestionsLoaded(final List<Suggestion> suggestionList) {
-                        toggleItineraryProgress(false);
-                        SuggestionsAdapter suggestionsAdapter = new SuggestionsAdapter(suggestionList, getContext());
-                        initSuggestionsRecyclerView();
-                        suggestionsRecyclerView.setAdapter(suggestionsAdapter);
-                        suggestionsLayout.setVisibility(View.VISIBLE);
+    private void showAndLoadSuggestions(final List<Suggestion> suggestionList) {
+        toggleItineraryProgress(false);
+        final SuggestionsAdapter suggestionsAdapter = new SuggestionsAdapter(suggestionList, getContext());
+        initSuggestionsRecyclerView();
+        suggestionsRecyclerView.setAdapter(suggestionsAdapter);
+        suggestionsLayout.setVisibility(View.VISIBLE);
 
-                        suggestionsRecyclerView.addOnItemTouchListener(
-                                new RecyclerItemClickListener(getContext(), suggestionsRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                                    @Override public void onItemClick(View view, int position) {
-                                        suggestionsLayout.setVisibility(View.GONE);
-                                        addSuggestionToPlanner(suggestionList.get(position));
-                                    }
-
-                                    @Override public void onLongItemClick(View view, int position) {
-                                        // do whatever
-                                    }
-                                })
-                        );
+        suggestionsRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), suggestionsRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        suggestionsLayout.setVisibility(View.GONE);
+                        addSuggestionToPlanner(suggestionList.get(position));
+                        suggestionList.clear();
+                        suggestionsAdapter.notifyDataSetChanged();
                     }
 
-                    private void initSuggestionsRecyclerView() {
-                        suggestionsRecyclerView.setHasFixedSize(true);
-
-                        LinearLayoutManager layoutManager
-                                = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-                        suggestionsRecyclerView.setLayoutManager(layoutManager);
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
                     }
-                });
-        task.execute();
+                })
+        );
+    }
+
+    private void initSuggestionsRecyclerView() {
+        suggestionsRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        suggestionsRecyclerView.setLayoutManager(layoutManager);
     }
 
     private void addSuggestionToPlanner(Suggestion suggestion) {
@@ -430,4 +432,18 @@ public class DayFragment extends Fragment {
         itineraryProgressBar.setVisibility(isBusy ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public Loader<List<Suggestion>> onCreateLoader(int id, Bundle args) {
+        return new LoadSuggestionTaskLoader(getContext(), locationEditText.getText().toString());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Suggestion>> loader, List<Suggestion> data) {
+        showAndLoadSuggestions(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Suggestion>> loader) {
+        showAndLoadSuggestions(new ArrayList<Suggestion>());
+    }
 }

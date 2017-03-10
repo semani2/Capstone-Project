@@ -1,7 +1,7 @@
 package sai.developement.travelogue.asynctasks;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.support.v4.content.AsyncTaskLoader;
 
 import com.orhanobut.logger.Logger;
 
@@ -20,10 +20,10 @@ import sai.developement.travelogue.BuildConfig;
 import sai.developement.travelogue.models.Suggestion;
 
 /**
- * Created by sai on 3/7/17.
+ * Created by sai on 3/10/17.
  */
 
-public class LoadSuggestionsTask extends AsyncTask<Void, Void, List<Suggestion>> {
+public class LoadSuggestionTaskLoader extends AsyncTaskLoader<List<Suggestion>> {
 
     private final static String RESPONSE = "response";
     private final static String GROUPS = "groups";
@@ -42,8 +42,6 @@ public class LoadSuggestionsTask extends AsyncTask<Void, Void, List<Suggestion>>
     private static final String WIDTH = "width";
     private static final String ID = "id";
 
-    private final ISuggestionsCallback mCallback;
-
     private static final String FOURSQUARE_BASE_URL =
             "https://api.foursquare.com/v2/venues/explore?client_id="+ BuildConfig.FOURSQUARE_CLIENT_ID
                     +"&client_secret="+BuildConfig.FOURSQUARE_CLIENT_SECRET+"&venuePhotos=1&v=20170307";
@@ -54,14 +52,15 @@ public class LoadSuggestionsTask extends AsyncTask<Void, Void, List<Suggestion>>
 
     private final OkHttpClient client = new OkHttpClient();
 
-    public LoadSuggestionsTask(Context context, String location, ISuggestionsCallback callback) {
+    public LoadSuggestionTaskLoader(Context context, String location) {
+        super(context);
+
         mExploreUrl = FOURSQUARE_BASE_URL.concat("&near="+ location);
-        this.mCallback = callback;
         this.mContext = context;
     }
 
     @Override
-    protected List<Suggestion> doInBackground(Void... voids) {
+    public List<Suggestion> loadInBackground() {
         try {
             Request request = new Request.Builder()
                     .url(mExploreUrl)
@@ -136,15 +135,5 @@ public class LoadSuggestionsTask extends AsyncTask<Void, Void, List<Suggestion>>
         }
 
         return suggestionList;
-    }
-
-    @Override
-    protected void onPostExecute(List<Suggestion> suggestionList) {
-        super.onPostExecute(suggestionList);
-        mCallback.onSuggestionsLoaded(suggestionList);
-    }
-
-    public interface ISuggestionsCallback {
-        void onSuggestionsLoaded(List<Suggestion> suggestionList);
     }
 }

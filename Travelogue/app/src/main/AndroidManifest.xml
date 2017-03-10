@@ -31,7 +31,8 @@
         <activity
             android:name=".activities.ViewTripActivity"
             android:parentActivityName=".activities.HomeActivity"
-            android:theme="@style/AppTheme.ViewTripActivity" />
+            android:theme="@style/AppTheme.ViewTripActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.ViewTripActivity"
