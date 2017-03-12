@@ -128,6 +128,8 @@ public class DayFragment extends Fragment implements ItineraryCallback{
             }
         });
 
+        initChildEventListener();
+
         return view;
     }
 
@@ -145,6 +147,9 @@ public class DayFragment extends Fragment implements ItineraryCallback{
         mTripVisitList.clear();
         mItineraryRecyclerAdapter.notifyDataSetChanged();
         loadItinerary();
+        if(mTripDayDatabaseReference != null) {
+            mTripDayDatabaseReference.addChildEventListener(mTripVisitsChildEventListener);
+        }
     }
 
     private void initItiRecyclerView() {
@@ -193,7 +198,6 @@ public class DayFragment extends Fragment implements ItineraryCallback{
                     mTripDayDatabaseReference = FirebaseDatabaseHelper.getTripVisitsReference()
                             .child(tripDay.getId());
 
-                    initChildEventListener();
                     mTripDayDatabaseReference.addChildEventListener(mTripVisitsChildEventListener);
 
                 }
@@ -264,6 +268,6 @@ public class DayFragment extends Fragment implements ItineraryCallback{
 
     @Override
     public void onItinerarySelected(TripVisit tripVisit) {
-
+        FirebaseDatabaseHelper.addTripVisitToDay(tripDay.getId(), tripVisit);
     }
 }

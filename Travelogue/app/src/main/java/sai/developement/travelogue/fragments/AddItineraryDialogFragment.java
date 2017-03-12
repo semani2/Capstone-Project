@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -70,8 +71,8 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
     @BindView(R.id.clear_itinerary_button)
     TextView clearItineraryButton;
 
-    @BindView(R.id.add_iti_place_image_view)
-    ImageView addItiPlaceImageView;
+    @BindView(R.id.itinerary_dialog_close)
+    ImageView closeDialogView;
 
     private ItineraryCallback mCallback = null;
 
@@ -83,8 +84,15 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
 
     PlaceAutocompleteFragment mPlaceAutocompleteFragment;
 
+    private List<Suggestion> mSuggestionsList = new ArrayList<>();
+
+    private SuggestionsAdapter mSuggestionsAdapter;
+
     public static AddItineraryDialogFragment newInstance() {
-        return new AddItineraryDialogFragment();
+        AddItineraryDialogFragment fragment = new AddItineraryDialogFragment();
+        fragment.setCancelable(false);
+
+        return fragment;
     }
 
     @Override
@@ -140,6 +148,7 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
                 if(mCallback != null) {
                     Logger.d("Passing trip visit back to Day Fragment");
                     mCallback.onItinerarySelected(tripVisit);
+                    dismiss();
                 }
 
             }
@@ -178,7 +187,25 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
             }
         });
 
+        closeDialogView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismissAllowingStateLoss();
+            }
+        });
+
+        initSuggestionsRecyclerView();
+
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().getFragmentManager()
+                .beginTransaction()
+                .remove(mPlaceAutocompleteFragment)
+                .commit();
     }
 
     @Override
@@ -188,9 +215,16 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
     }
 
     private void setLocation(String location) {
+        clearSuggestions();
         mLocation = location;
         tripPlaceEditText.setEnabled(mLocation != null);
         fromTimeEditText.setEnabled(mLocation != null);
+    }
+
+    private void clearSuggestions() {
+        suggestionsLayout.setVisibility(View.GONE);
+        mSuggestionsList.clear();
+        mSuggestionsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -205,7 +239,6 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
         mPlaceAutocompleteFragment.setText(null);
         tripPlaceEditText.setText(null);
         fromTimeEditText.setText(null);
-        addItiPlaceImageView.setVisibility(View.GONE);
     }
 
     private void initSuggestionsRecyclerView() {
@@ -215,31 +248,30 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         suggestionsRecyclerView.setLayoutManager(layoutManager);
+
+        mSuggestionsAdapter = new SuggestionsAdapter(mSuggestionsList, getContext());
+
+        suggestionsRecyclerView.setAdapter(mSuggestionsAdapter);
     }
 
     private void addSuggestionToPlanner(Suggestion suggestion) {
         mselectedSuggestion = suggestion;
-        /*Glide.with(getContext())
-                .load(suggestion.getPhotoUrl())
-                .centerCrop()
-                .into(addItiPlaceImageView);*/
         tripPlaceEditText.setText(suggestion.getName());
-        //addItiPlaceImageView.setVisibility(View.VISIBLE);
     }
 
     private void showAndLoadSuggestions(final List<Suggestion> suggestionList) {
-        final SuggestionsAdapter suggestionsAdapter = new SuggestionsAdapter(suggestionList, getContext());
-        initSuggestionsRecyclerView();
-        suggestionsRecyclerView.setAdapter(suggestionsAdapter);
         suggestionsLayout.setVisibility(View.VISIBLE);
+        mSuggestionsList.clear();
+        mSuggestionsList.addAll(suggestionList);
+
+        mSuggestionsAdapter.notifyDataSetChanged();
 
         suggestionsRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), suggestionsRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        suggestionsLayout.setVisibility(View.GONE);
-                        addSuggestionToPlanner(suggestionList.get(position));
-                        suggestionList.clear();
-                        suggestionsAdapter.notifyDataSetChanged();
+                        addSuggestionToPlanner(mSuggestionsList.get(position));
+                        clearSuggestions();
+
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
@@ -256,6 +288,11 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
 
     @Override
     public void onLoadFinished(Loader<List<Suggestion>> loader, List<Suggestion> data) {
+        if(data == null || data.size() == 0) {
+            Toast.makeText(getContext(), getContext().getString(R.string.str_error_fetching_suggestions, mLocation), Toast.LENGTH_LONG).show();
+            suggestionsLayout.setVisibility(View.GONE);
+            return;
+        }
         showAndLoadSuggestions(data);
     }
 

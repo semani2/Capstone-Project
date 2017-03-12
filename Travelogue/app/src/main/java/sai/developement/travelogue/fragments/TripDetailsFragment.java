@@ -124,10 +124,10 @@ public class TripDetailsFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.toString().length() > 0) {
-                    emailEditText.setEnabled(true);
+                    addUserButton.setEnabled(true);
                 }
                 else{
-                    emailEditText.setEnabled(false);
+                    addUserButton.setEnabled(false);
                 }
             }
 
