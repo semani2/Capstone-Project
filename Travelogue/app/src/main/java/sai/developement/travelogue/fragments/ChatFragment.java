@@ -126,6 +126,7 @@ public class ChatFragment extends Fragment {
                 TripMessage tripMessage = dataSnapshot.getValue(TripMessage.class);
                 mTripMessages.add(tripMessage);
                 mChatAdapter.notifyDataSetChanged();
+                chatRecyclerView.scrollToPosition(mTripMessages.size() - 1);
             }
 
             @Override
@@ -181,6 +182,7 @@ public class ChatFragment extends Fragment {
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setStackFromEnd(true);
         chatRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
