@@ -68,6 +68,9 @@ public class TripDetailsFragment extends Fragment {
     @BindView(R.id.users_list_empty_view)
     TextView emptyListView;
 
+    @BindView(R.id.trip_loc_text_view)
+    TextView tripLocTextView;
+
     private Trip mTrip;
 
     private TripMatesListAdapter mTripMatesListAdapter;
@@ -98,6 +101,7 @@ public class TripDetailsFragment extends Fragment {
 
         if(mTrip != null) {
             tripNameTextView.setText(mTrip.getName());
+            tripLocTextView.setText(mTrip.getPrimaryLocation());
             startDateTextView.setText(mTrip.getStartDate());
             endDateTextView.setText(mTrip.getEndDate());
             if(mTrip.getTravellers() != null) {
