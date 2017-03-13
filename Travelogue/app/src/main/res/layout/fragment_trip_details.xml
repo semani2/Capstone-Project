@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="sai.developement.travelogue.fragments.AddNewTripFragment"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:nestedScrollingEnabled="true">
     <RelativeLayout
         android:padding="10dp"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -127,7 +128,8 @@
                     android:id="@+id/user_email_edit_text"
                     android:hint="@string/str_add_users_hint"
                     android:textSize="16sp"
-                    android:inputType="textEmailAddress"/>
+                    android:inputType="textEmailAddress"
+                    android:visibility="gone"/>
 
                 <Button
                     android:layout_width="0dp"
