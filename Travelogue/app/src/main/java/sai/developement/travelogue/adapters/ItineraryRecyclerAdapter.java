@@ -72,7 +72,7 @@ public class ItineraryRecyclerAdapter extends RecyclerView.Adapter<ItineraryRecy
 
                         public void onPalette(Palette palette) {
                             if (null != palette) {
-                                holder.mItiTextLayout.setBackgroundColor(palette.getDarkVibrantColor(Color.GRAY));
+                                holder.mItiTextLayout.setBackgroundColor(palette.getDarkMutedColor(Color.GRAY));
                             }
                         }
                     })

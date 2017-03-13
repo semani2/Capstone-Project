@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +71,9 @@ public class TripDetailsFragment extends Fragment {
 
     @BindView(R.id.trip_loc_text_view)
     TextView tripLocTextView;
+
+    @BindView(R.id.details_fragment_scroll_view)
+    ScrollView mainScrollView;
 
     private Trip mTrip;
 
@@ -254,5 +258,11 @@ public class TripDetailsFragment extends Fragment {
         } else {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mainScrollView.requestFocus();
     }
 }
