@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,12 @@ public class TripDetailsFragment extends Fragment {
     @BindView(R.id.users_list_empty_view)
     TextView emptyListView;
 
+    @BindView(R.id.trip_loc_text_view)
+    TextView tripLocTextView;
+
+    @BindView(R.id.details_fragment_scroll_view)
+    ScrollView mainScrollView;
+
     private Trip mTrip;
 
     private TripMatesListAdapter mTripMatesListAdapter;
@@ -98,6 +105,7 @@ public class TripDetailsFragment extends Fragment {
 
         if(mTrip != null) {
             tripNameTextView.setText(mTrip.getName());
+            tripLocTextView.setText(mTrip.getPrimaryLocation());
             startDateTextView.setText(mTrip.getStartDate());
             endDateTextView.setText(mTrip.getEndDate());
             if(mTrip.getTravellers() != null) {
@@ -157,7 +165,7 @@ public class TripDetailsFragment extends Fragment {
                                         user.setEmail((String) ((HashMap) pair.getValue()).get("email"));
                                         user.setId((String) ((HashMap) pair.getValue()).get("id"));
                                         user.setName((String) ((HashMap) pair.getValue()).get("name"));
-                                        user.setAvatarId((Integer)  ((HashMap) pair.getValue()).get("avatarId"));
+                                        user.setAvatarId(((Long)((HashMap) pair.getValue()).get("avatarId")).intValue());
                                         break;
                                     }
 
@@ -250,5 +258,11 @@ public class TripDetailsFragment extends Fragment {
         } else {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mainScrollView.requestFocus();
     }
 }

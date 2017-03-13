@@ -44,7 +44,7 @@ public class LoadPlaceImageTask extends AsyncTask<Void, Void, Void> {
     private final OnCompleteListener mOnCompleteListener;
 
     private final String FLICKR_API_URL = "https://api.flickr.com/services/rest/?api_key="+ BuildConfig.FLICKR_KEY +
-            "&sort=interestingness-asc&format=json&accuracy=3&method=flickr.photos.search&nojsoncallback=1";
+            "&sort=interestingness-desc&format=json&accuracy=3&method=flickr.photos.search&nojsoncallback=1";
 
     private final String SEARCH_URL;
 

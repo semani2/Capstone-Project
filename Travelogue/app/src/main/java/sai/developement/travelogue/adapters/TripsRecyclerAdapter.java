@@ -1,18 +1,30 @@
 package sai.developement.travelogue.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.HomeActivity;
 import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.models.Trip;
 
@@ -24,10 +36,14 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
 
     private final ArrayList<Trip> mTripsLit;
     private final Activity mActivity;
+    private final int mTripFlag;
+    private final Context mContext;
 
-    public TripsRecyclerAdapter(ArrayList<Trip> trips, Activity activity) {
+    public TripsRecyclerAdapter(Context context, ArrayList<Trip> trips, Activity activity, int tripFlag) {
         mTripsLit = trips;
         mActivity = activity;
+        mTripFlag = tripFlag;
+        mContext = context;
     }
 
     @Override
@@ -39,11 +55,42 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(TripViewHolder holder, final int position) {
+    public void onBindViewHolder(final TripViewHolder holder, final int position) {
         holder.mTripNameTextView.setText(mTripsLit.get(position).getName());
         holder.mDateTextView.setText(mTripsLit.get(position).getStartDate() + " - "
                 + mTripsLit.get(position).getEndDate());
         holder.mTripCreatorTextView.setText(mTripsLit.get(position).getCreatedByUsername());
+        holder.mTripCreatorTextView.setVisibility(mTripFlag == HomeActivity.SHARED_TRIPS_FLAG ? View.VISIBLE : View.GONE);
+
+        if(mTripsLit.get(position).getPhotoUrl() != null) {
+            Glide.with(mContext)
+                    .load(mTripsLit.get(position).getPhotoUrl())
+                    .asBitmap()
+                    .listener(new RequestListener<String, Bitmap>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            onPalette(Palette.from(resource).generate());
+                            holder.mTripImageView.setImageBitmap(resource);
+
+                            return false;
+                        }
+
+                        public void onPalette(Palette palette) {
+                            if (null != palette) {
+                                holder.mTripTextLayout.setBackgroundColor(palette.getDarkVibrantColor(Color.GRAY));
+                            }
+                        }
+                    })
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(holder.mTripImageView);
+        }
+
         holder.mTripLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +116,8 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
         public TextView mDateTextView;
         public TextView mTripCreatorTextView;
         public CardView mTripLayout;
+        public LinearLayout mTripTextLayout;
+        public ImageView mTripImageView;
 
         public TripViewHolder(View v) {
             super(v);
@@ -76,6 +125,8 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
             mDateTextView = (TextView) v.findViewById(R.id.trip_date_text_view);
             mTripCreatorTextView = (TextView) v.findViewById(R.id.trip_creator_text_view);
             mTripLayout = (CardView) v.findViewById(R.id.trip_layout);
+            mTripTextLayout = (LinearLayout) v.findViewById(R.id.trip_text_layout);
+            mTripImageView = (ImageView) v.findViewById(R.id.trip_image_view);
         }
     }
 }

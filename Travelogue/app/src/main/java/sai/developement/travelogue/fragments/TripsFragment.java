@@ -46,6 +46,8 @@ public class TripsFragment extends Fragment {
 
     private String mUserId;
 
+    private int mTripsFlag = 0;
+
     public TripsFragment() {
 
     }
@@ -60,7 +62,8 @@ public class TripsFragment extends Fragment {
 
         mUserId = getArguments().getString(HomeActivity.USER_ID_KEY);
 
-        if(getArguments().getInt(HomeActivity.TRIP_FLAG) == HomeActivity.MY_TRIPS_FLAG) {
+        mTripsFlag = getArguments().getInt(HomeActivity.TRIP_FLAG);
+        if(mTripsFlag == HomeActivity.MY_TRIPS_FLAG) {
             mTripsReference = FirebaseDatabaseHelper.getTripsDatabaseReference().
                     child(mUserId);
         }
@@ -113,7 +116,7 @@ public class TripsFragment extends Fragment {
         tripsRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mTripsAdapter = new TripsRecyclerAdapter(mTrips, getActivity());
+        mTripsAdapter = new TripsRecyclerAdapter(getContext(), mTrips, getActivity(), mTripsFlag);
         tripsRecyclerView.setAdapter(mTripsAdapter);
 
         if(mTrips.size() == 0) {
