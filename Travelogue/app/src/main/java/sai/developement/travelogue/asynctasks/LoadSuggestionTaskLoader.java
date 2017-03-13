@@ -50,11 +50,14 @@ public class LoadSuggestionTaskLoader extends AsyncTaskLoader<List<Suggestion>> 
 
     private final Context mContext;
 
+    private final String mLocation;
+
     private final OkHttpClient client = new OkHttpClient();
 
     public LoadSuggestionTaskLoader(Context context, String location) {
         super(context);
 
+        this.mLocation = location;
         mExploreUrl = FOURSQUARE_BASE_URL.concat("&near="+ location);
         this.mContext = context;
     }
@@ -67,8 +70,12 @@ public class LoadSuggestionTaskLoader extends AsyncTaskLoader<List<Suggestion>> 
                     .build();
 
             Response response = client.newCall(request).execute();
+            if(response.code() != 200) {
+                return new ArrayList<>();
+            }
             final String responseString = response.body().string();
             Logger.d(responseString);
+
 
             return parseSuggestionJson(responseString);
         }
@@ -77,6 +84,8 @@ public class LoadSuggestionTaskLoader extends AsyncTaskLoader<List<Suggestion>> 
             return null;
         }
     }
+
+
 
     private List<Suggestion> parseSuggestionJson(String responseString) {
         List<Suggestion> suggestionList = new ArrayList<>();

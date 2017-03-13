@@ -39,12 +39,20 @@
                 android:hint="@string/str_trip_name" />
         </android.support.design.widget.TextInputLayout>
 
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:layout_marginTop="10dp"
+            android:id="@+id/place_autocomplete_fragment"
+            android:layout_below="@id/trip_name_text_input_layout"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/date_picker_layout"
             android:orientation="horizontal"
-            android:layout_below="@id/trip_name_text_input_layout"
+            android:layout_below="@id/place_autocomplete_fragment"
             android:weightSum="1"
             android:layout_marginTop="10dp">
 

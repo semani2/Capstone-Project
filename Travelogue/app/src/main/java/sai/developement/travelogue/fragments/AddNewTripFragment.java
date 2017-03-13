@@ -24,6 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +42,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +52,7 @@ import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.adapters.TripMatesListAdapter;
+import sai.developement.travelogue.asynctasks.LoadPlaceImageTask;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.GenerateGUIDHelper;
 import sai.developement.travelogue.models.Trip;
@@ -91,6 +97,8 @@ public class AddNewTripFragment extends Fragment {
     @BindView(R.id.progress_bar_layout)
     RelativeLayout progressBarLayout;
 
+    private PlaceAutocompleteFragment mPlaceAutocompleteFragment;
+
     private Calendar startCalendar = null;
 
     private Calendar endCalendar = null;
@@ -98,6 +106,8 @@ public class AddNewTripFragment extends Fragment {
     private TripMatesListAdapter listAdapter;
 
     private ArrayList<User> travelMatesList = new ArrayList<>();
+
+    private Place mTripPlace = null;
 
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.US);
 
@@ -126,6 +136,22 @@ public class AddNewTripFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_new_trip, container, false);
         ButterKnife.bind(this, view);
+
+        mPlaceAutocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager()
+                .findFragmentById(R.id.place_autocomplete_fragment);
+
+        mPlaceAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                Logger.d("Place for trip selected " + place.getName());
+                tripPlaceAdded(place);
+            }
+
+            @Override
+            public void onError(Status status) {
+                Logger.e(status.getStatusMessage());
+            }
+        });
 
         final View.OnClickListener startDateClickListener = new View.OnClickListener() {
             @Override
@@ -190,9 +216,41 @@ public class AddNewTripFragment extends Fragment {
         return view;
     }
 
+    private void tripPlaceAdded(Place place) {
+        // Check if Place is a country, locality, if not show a message to the user
+        List<Integer> placeTypes = place.getPlaceTypes();
+        Iterator placeTypeIterator = placeTypes.iterator();
+        boolean isCityOrCountry = false;
+        while(placeTypeIterator.hasNext()) {
+            switch ((Integer)placeTypeIterator.next()) {
+                case Place.TYPE_COUNTRY:
+                    isCityOrCountry = true;
+                    break;
+
+                case Place.TYPE_LOCALITY:
+                    isCityOrCountry = true;
+                    break;
+
+                default:
+                    isCityOrCountry = false;
+                    break;
+            }
+            if(isCityOrCountry) {
+                break;
+            }
+        }
+        if(!isCityOrCountry) {
+            Toast.makeText(getContext(), getString(R.string.str_select_valid_city), Toast.LENGTH_LONG).show();
+        }
+        else {
+            mTripPlace = place;
+        }
+    }
+
     private void saveTrip() {
-        toggleProgressBar(true);
-        if(validateInput(tripNameEditText, startDateEditText, endDateEditText)) {
+        if(validateInput(tripNameEditText, startDateEditText, endDateEditText))
+        {
+            toggleProgressBar(true);
             String tripId = GenerateGUIDHelper.generateGUID(GenerateGUIDHelper.Model.TRIP);
 
             String startDate = dateFormatForMonth.format(startCalendar.getTime());
@@ -214,7 +272,7 @@ public class AddNewTripFragment extends Fragment {
                 trip.setCreateByUseremail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
             }
 
-            FirebaseDatabaseHelper.addNewTrip(trip, new OnCompleteListener<Void>() {
+            LoadPlaceImageTask loadPlaceImageTask = new LoadPlaceImageTask(trip, mTripPlace, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
 
@@ -232,6 +290,11 @@ public class AddNewTripFragment extends Fragment {
                     }
                 }
             });
+
+            loadPlaceImageTask.execute();
+        }
+        else {
+            // Set error tet messages
         }
     }
 
@@ -268,6 +331,10 @@ public class AddNewTripFragment extends Fragment {
                 editTexts[i].setError(getString(R.string.str_required_field));
                 validInput = false;
             }
+        }
+
+        if(mTripPlace == null) {
+            validInput = false;
         }
 
         return validInput;
