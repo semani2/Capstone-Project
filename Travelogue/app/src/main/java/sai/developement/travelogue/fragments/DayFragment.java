@@ -248,6 +248,12 @@ public class DayFragment extends Fragment implements ItineraryCallback{
     }
 
     private void addTripVisitToAdapter(TripVisit tripVisit) {
+        Iterator<TripVisit> tripVisitIterator = mTripVisitList.iterator();
+        while(tripVisitIterator.hasNext()) {
+            if(tripVisitIterator.next().getId().equalsIgnoreCase(tripVisit.getId())) {
+                tripVisitIterator.remove();
+            }
+        }
         mTripVisitList.add(tripVisit);
 
         mItineraryRecyclerAdapter.notifyDataSetChanged();
