@@ -23,6 +23,8 @@ public class Trip implements Parcelable {
     public int duration;
     public String createdByUsername;
     public String createByUseremail;
+    public String primaryLocation;
+    public String photoUrl;
     public long startDateMillis;
 
 
@@ -31,7 +33,7 @@ public class Trip implements Parcelable {
     }
 
     public Trip(String id, String name, String startDate, String endDate, List<User> travellers, int duration,
-                String createdByUsername, String createByUseremail, long startDateMillis) {
+                String createdByUsername, String createByUseremail, long startDateMillis, String primaryLocation, String photoUrl) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -41,6 +43,8 @@ public class Trip implements Parcelable {
         this.createdByUsername = createdByUsername;
         this.createByUseremail = createByUseremail;
         this.startDateMillis = startDateMillis;
+        this.primaryLocation = primaryLocation;
+        this.photoUrl = photoUrl;
     }
 
     public String getId() {
@@ -115,6 +119,22 @@ public class Trip implements Parcelable {
         this.startDateMillis = startDateMillis;
     }
 
+    public String getPrimaryLocation() {
+        return primaryLocation;
+    }
+
+    public void setPrimaryLocation(String primaryLocation) {
+        this.primaryLocation = primaryLocation;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
     protected Trip(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -129,6 +149,8 @@ public class Trip implements Parcelable {
         duration = in.readInt();
         createdByUsername = in.readString();
         createByUseremail = in.readString();
+        primaryLocation = in.readString();
+        photoUrl = in.readString();
         startDateMillis = in.readLong();
     }
 
@@ -152,6 +174,8 @@ public class Trip implements Parcelable {
         dest.writeInt(duration);
         dest.writeString(createdByUsername);
         dest.writeString(createByUseremail);
+        dest.writeString(primaryLocation);
+        dest.writeString(photoUrl);
         dest.writeLong(startDateMillis);
     }
 

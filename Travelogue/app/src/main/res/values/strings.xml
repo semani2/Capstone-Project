@@ -52,4 +52,5 @@
     <!-- Itinerary PLanner strings -->
     <string name="str_itinerary_suggestions">Places you may like to visit&#8230;</string>
     <string name="str_error_fetching_suggestions">No suggestions found for %1$s. \nPlease select a valid city or country.</string>
+    <string name="str_select_valid_city">Please select a country or city.</string>
 </resources>
