@@ -1,5 +1,8 @@
 package sai.developement.travelogue.fragments;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +27,7 @@ import sai.developement.travelogue.activities.HomeActivity;
 import sai.developement.travelogue.adapters.TripsRecyclerAdapter;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.models.Trip;
+import sai.developement.travelogue.widget.TravelogueWidgetProvider;
 
 /**
  * Created by sai on 3/10/17.
@@ -84,6 +88,7 @@ public class TripsFragment extends Fragment {
                 if(dataSnapshot != null && dataSnapshot.getValue() != null) {
                     addDataToAdapter(dataSnapshot.getValue(Trip.class));
                 }
+                updateWidget();
             }
 
             @Override
@@ -106,6 +111,19 @@ public class TripsFragment extends Fragment {
 
             }
         };
+    }
+
+    private void updateWidget() {
+        ComponentName name = new ComponentName(getActivity(), TravelogueWidgetProvider.class);
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(getActivity());
+        int[] ids = widgetManager.getAppWidgetIds(name);
+        Intent intent = new Intent(getActivity(), TravelogueWidgetProvider.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        intent.putExtra(AppWidgetManager.ACTION_APPWIDGET_UPDATE, ids);
+
+        widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widget_list_view);
+
+        getActivity().sendBroadcast(intent);
     }
 
     private void initRecyclerView() {

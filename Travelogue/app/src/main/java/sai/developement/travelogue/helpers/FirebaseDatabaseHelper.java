@@ -1,5 +1,6 @@
 package sai.developement.travelogue.helpers;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,12 +38,18 @@ public class FirebaseDatabaseHelper {
     public static final String DB_NODE_MESSAGES = "messages";
     public static final String DB_NODE_SHARED_TRIPS = "shared_trips";
 
+    private static Context sContext;
+
     private static String getCurrentUserId() {
         if(FirebaseAuth.getInstance() != null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             return FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
         Logger.e("Current user null");
         return null;
+    }
+
+    public static void setContext(Context context) {
+        sContext = context;
     }
 
     public static void onLoginComplete(DatabaseReference mDatabase, final User user) {
@@ -116,7 +123,7 @@ public class FirebaseDatabaseHelper {
     }
 
     private static void setCurrentUser(User user) {
-        CurrentUser.setCurrentUser(user.getId(), user.getName(), user.getEmail());
+        CurrentUser.setCurrentUser(sContext, user.getId(), user.getName(), user.getEmail());
     }
 
     public static void saveUserAvatar(String userId, final int avatarId, final OnCompleteListener onCompleteListener) {
