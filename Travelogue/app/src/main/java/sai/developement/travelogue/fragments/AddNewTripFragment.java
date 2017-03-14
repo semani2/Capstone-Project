@@ -232,7 +232,7 @@ public class AddNewTripFragment extends Fragment {
         });
 
         boolean isConnected = ((TravelogueActivity) getActivity()).isConnected();
-        addUserButton.setEnabled(isConnected);
+        addUserButton.setEnabled(false);
         saveTripButton.setEnabled(isConnected);
 
         return view;
