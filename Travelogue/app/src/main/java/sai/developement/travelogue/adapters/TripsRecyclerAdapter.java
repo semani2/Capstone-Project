@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.activities.HomeActivity;
 import sai.developement.travelogue.activities.ViewTripActivity;
+import sai.developement.travelogue.helpers.PlaceHolderImageHelper;
 import sai.developement.travelogue.models.Trip;
 
 /**
@@ -69,6 +70,7 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
                     .listener(new RequestListener<String, Bitmap>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                            holder.mTripTextLayout.setBackgroundColor(Color.GRAY);
                             return false;
                         }
 
@@ -87,6 +89,7 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
                         }
                     })
                     .centerCrop()
+                    .placeholder(PlaceHolderImageHelper.getPlaceHolderImage())
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.mTripImageView);
         }

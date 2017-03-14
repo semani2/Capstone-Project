@@ -26,8 +26,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.TripPagesAdapter;
-import sai.developement.travelogue.eventhandlers.IEventHandler;
-import sai.developement.travelogue.eventhandlers.ViewTripEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.IEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.ViewTripEventHandler;
+import sai.developement.travelogue.helpers.PlaceHolderImageHelper;
 import sai.developement.travelogue.models.Trip;
 
 public class ViewTripActivity extends TravelogueActivity {
@@ -97,6 +98,7 @@ public class ViewTripActivity extends TravelogueActivity {
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        changeToolbarColors(null);
                         return false;
                     }
 
@@ -109,6 +111,7 @@ public class ViewTripActivity extends TravelogueActivity {
                         return false;
                     }
                 })
+                .placeholder(PlaceHolderImageHelper.getPlaceHolderImage())
                 .into(tripImageView);
     }
 
@@ -146,6 +149,12 @@ public class ViewTripActivity extends TravelogueActivity {
     }
 
     private void changeToolbarColors(Bitmap bitmap) {
+        if(bitmap == null) {
+            mCollapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
+            mCollapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(R.color.colorPrimaryDark));
+            return;
+        }
+
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 int vibrantColor = palette.getVibrantColor(getResources().getColor(R.color.colorPrimary));

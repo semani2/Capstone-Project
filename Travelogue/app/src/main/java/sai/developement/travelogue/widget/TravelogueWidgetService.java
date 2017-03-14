@@ -23,6 +23,7 @@ import java.util.List;
 import sai.developement.travelogue.CurrentUser;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
+import sai.developement.travelogue.helpers.PlaceHolderImageHelper;
 import sai.developement.travelogue.models.Trip;
 
 /**
@@ -134,6 +135,7 @@ public class TravelogueWidgetService extends RemoteViewsService {
                         .load(mTripsList.get(position).getPhotoUrl())
                         .asBitmap()
                         .centerCrop()
+                        .placeholder(PlaceHolderImageHelper.getPlaceHolderImage())
                         .into(50, 50)
                         .get();
                 views.setImageViewBitmap(R.id.widget_trip_image_view, bitmap);

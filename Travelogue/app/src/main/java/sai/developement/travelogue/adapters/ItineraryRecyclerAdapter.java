@@ -20,6 +20,7 @@ import com.bumptech.glide.request.target.Target;
 import java.util.List;
 
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.helpers.PlaceHolderImageHelper;
 import sai.developement.travelogue.models.TripVisit;
 
 /**
@@ -59,6 +60,7 @@ public class ItineraryRecyclerAdapter extends RecyclerView.Adapter<ItineraryRecy
                     .listener(new RequestListener<String, Bitmap>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                            holder.mItiTextLayout.setBackgroundColor(Color.GRAY);
                             return false;
                         }
 
@@ -78,6 +80,7 @@ public class ItineraryRecyclerAdapter extends RecyclerView.Adapter<ItineraryRecy
                     })
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .placeholder(PlaceHolderImageHelper.getPlaceHolderImage())
                     .into(holder.mItiImageView);
         }
     }

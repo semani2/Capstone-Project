@@ -1,4 +1,4 @@
-package sai.developement.travelogue.eventhandlers;
+package sai.developement.travelogue.eventhandlers.activities;
 
 import sai.developement.travelogue.activities.TravelogueActivity;
 

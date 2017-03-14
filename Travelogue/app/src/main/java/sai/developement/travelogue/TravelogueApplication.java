@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import sai.developement.travelogue.helpers.ConnectivityHelper;
 import sai.developement.travelogue.helpers.analytics.FirebaseAnalyticsHelper;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 
@@ -15,8 +16,13 @@ public class TravelogueApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initHelpers();
+    }
+
+    private void initHelpers() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseDatabaseHelper.setContext(this);
         FirebaseAnalyticsHelper.setAnalyticsInstance(this);
+        new ConnectivityHelper(this).init();
     }
 }
