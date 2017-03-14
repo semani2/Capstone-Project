@@ -1,10 +1,12 @@
 package sai.developement.travelogue.fragments;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,6 +39,7 @@ import sai.developement.travelogue.eventhandlers.fragments.DayFragmentEventHandl
 import sai.developement.travelogue.eventhandlers.fragments.IFragmentEventHandler;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.analytics.FirebaseItineraryAnalyticsHelper;
+import sai.developement.travelogue.listeners.RecyclerItemClickListener;
 import sai.developement.travelogue.models.TripDay;
 import sai.developement.travelogue.models.TripVisit;
 
@@ -188,6 +191,36 @@ public class DayFragment extends Fragment implements ItineraryCallback{
             itineraryRecyclerView.setVisibility(View.VISIBLE);
             emptyItineraryTextView.setVisibility(View.GONE);
         }
+
+        itineraryRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), itineraryRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        showDeleteAlert(position);
+                    }
+                })
+        );
+    }
+
+    private void showDeleteAlert(int position) {
+        final TripVisit tripVisit = mTripVisitList.get(position);
+        new AlertDialog.Builder(getContext())
+                .setTitle(tripVisit.getPlace())
+                .setMessage(getString(R.string.str_delete_itinerary, tripVisit.getPlace()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseDatabaseHelper.deleteTripVisit(tripDay.getId(), tripVisit);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void loadItinerary() {
@@ -249,7 +282,9 @@ public class DayFragment extends Fragment implements ItineraryCallback{
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                if(dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    deleteTripVisit(dataSnapshot.getValue(TripVisit.class));
+                }
             }
 
             @Override
@@ -262,6 +297,17 @@ public class DayFragment extends Fragment implements ItineraryCallback{
 
             }
         };
+    }
+
+    private void deleteTripVisit(TripVisit value) {
+        Iterator<TripVisit> currentVisits = mTripVisitList.iterator();
+
+        while(currentVisits.hasNext()) {
+            if(currentVisits.next().getId().equalsIgnoreCase(value.getId())) {
+                currentVisits.remove();
+            }
+        }
+        mItineraryRecyclerAdapter.notifyDataSetChanged();
     }
 
     private void addTripVisitToAdapter(TripVisit tripVisit) {

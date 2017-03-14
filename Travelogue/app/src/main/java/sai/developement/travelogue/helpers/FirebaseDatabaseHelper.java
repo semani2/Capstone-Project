@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import sai.developement.travelogue.CurrentUser;
 import sai.developement.travelogue.events.SelectAvatarEvent;
@@ -239,6 +240,28 @@ public class FirebaseDatabaseHelper {
                 .setValue(trip);
     }
 
+    public static void deleteTrip(Trip trip) {
+        Logger.d("Deleting Trip " + trip.getId());
+
+        List<User> travelMates = trip.getTravellers();
+
+        DatabaseReference tripDatabaseReference = getTripsDatabaseReference();
+        tripDatabaseReference.child(CurrentUser.getCurrentuser().getUserId())
+                .child(trip.getId())
+                .removeValue();
+
+        DatabaseReference sharedTripsDatabaseReference = getSharedTripsDatabaseReference();
+        // Remove all shared trips
+
+        if(travelMates != null && travelMates.size() > 0) {
+            for (User user : travelMates) {
+                sharedTripsDatabaseReference.child(user.getId())
+                        .child(trip.getId())
+                        .removeValue();
+            }
+        }
+    }
+
     public static void addTripDayForTrip(Trip trip, TripDay tripDay) {
         Logger.d("Adding trip day " + tripDay.getId() + " , for trip : " + trip.getId());
 
@@ -270,6 +293,13 @@ public class FirebaseDatabaseHelper {
         databaseReference.child(tripDayId)
                 .child(tripVisit.getId())
                 .setValue(tripVisit);
+    }
+
+    public static void deleteTripVisit(String tripDayId, TripVisit tripVisit) {
+        DatabaseReference databaseReference = getTripVisitsReference();
+        databaseReference.child(tripDayId)
+                .child(tripVisit.getId())
+                .removeValue();
     }
 
     /* Chat Helper methods */
