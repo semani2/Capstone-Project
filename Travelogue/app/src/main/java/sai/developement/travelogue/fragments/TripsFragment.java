@@ -178,7 +178,9 @@ public class TripsFragment extends Fragment {
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        showDeleteAlert(position);
+                        if(mTripsFlag == HomeActivity.MY_TRIPS_FLAG) {
+                            showDeleteAlert(position);
+                        }
                     }
                 })
         );

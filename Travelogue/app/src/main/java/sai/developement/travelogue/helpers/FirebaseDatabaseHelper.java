@@ -295,6 +295,13 @@ public class FirebaseDatabaseHelper {
                 .setValue(tripVisit);
     }
 
+    public static void deleteTripVisit(String tripDayId, TripVisit tripVisit) {
+        DatabaseReference databaseReference = getTripVisitsReference();
+        databaseReference.child(tripDayId)
+                .child(tripVisit.getId())
+                .removeValue();
+    }
+
     /* Chat Helper methods */
     public static DatabaseReference getChatDatabaseReference(String tripId) {
         return FirebaseDatabase.getInstance()
