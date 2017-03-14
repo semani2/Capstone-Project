@@ -32,6 +32,7 @@ import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.ItineraryRecyclerAdapter;
 import sai.developement.travelogue.callbacks.ItineraryCallback;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
+import sai.developement.travelogue.helpers.analytics.FirebaseItineraryAnalyticsHelper;
 import sai.developement.travelogue.models.TripDay;
 import sai.developement.travelogue.models.TripVisit;
 
@@ -275,5 +276,6 @@ public class DayFragment extends Fragment implements ItineraryCallback{
     @Override
     public void onItinerarySelected(TripVisit tripVisit) {
         FirebaseDatabaseHelper.addTripVisitToDay(tripDay.getId(), tripVisit);
+        FirebaseItineraryAnalyticsHelper.logItineraryAddedEvent(tripDay.getId());
     }
 }

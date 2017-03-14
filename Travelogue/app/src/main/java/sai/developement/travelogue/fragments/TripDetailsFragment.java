@@ -35,6 +35,7 @@ import sai.developement.travelogue.R;
 import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.adapters.TripMatesListAdapter;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
+import sai.developement.travelogue.helpers.analytics.FirebaseTravelMateAnalyticsHelper;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.User;
 
@@ -250,6 +251,7 @@ public class TripDetailsFragment extends Fragment {
 
     private void addUserToTrip(User user) {
         FirebaseDatabaseHelper.addSharedTrip(user.getId(), mTrip);
+        FirebaseTravelMateAnalyticsHelper.logTravelMateAddedEvent(mTrip.getId());
     }
 
     private boolean validateEmail(String email) {
