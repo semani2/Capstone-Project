@@ -2,6 +2,8 @@ package sai.developement.travelogue.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +50,13 @@ public class ChatActivity extends TravelogueActivity {
     @Override
     public void onUserLoggedIn(@NonNull FirebaseAuth firebaseAuth) {
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
+        return true;
     }
 
     @Override
