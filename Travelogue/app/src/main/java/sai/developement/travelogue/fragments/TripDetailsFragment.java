@@ -235,27 +235,6 @@ public class TripDetailsFragment extends Fragment {
                 break;
             }
         }
-        //Add current user to the trip:
-        User user = new User();
-        CurrentUser localUser = CurrentUser.getCurrentuser();
-        user.setId(localUser.getUserId());
-        user.setEmail(localUser.getUserEmail());
-        user.setName(localUser.getUserName());
-        user.setAvatarId(localUser.getUserAvatarId());
-
-
-        boolean currentUserExists = false;
-        while(iterator.hasNext()) {
-            User currentUser = iterator.next();
-            if(newUser.getEmail().equalsIgnoreCase(currentUser.getEmail())) {
-                currentUserExists = true;
-                break;
-            }
-        }
-
-        if(!currentUserExists) {
-            mTripMates.add(user);
-        }
 
         if(!alreadyExists) {
             mTripMates.add(newUser);
