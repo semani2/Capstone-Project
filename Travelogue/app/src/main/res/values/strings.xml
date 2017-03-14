@@ -38,6 +38,8 @@
     <!-- Chat Activity Strings -->
     <string name="str_chat">Chat</string>
     <string name="str_say_something">Say something&#8230;</string>
+    <string name="str_you">You, %1$s</string>
+    <string name="str_other_sent">%1$s, %2$s</string>
 
     <!-- User Avatar Dialog Strings -->
     <string name="str_select_avatar">Select Your Avatar</string>

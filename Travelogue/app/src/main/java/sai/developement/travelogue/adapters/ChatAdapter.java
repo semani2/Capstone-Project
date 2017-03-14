@@ -58,7 +58,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .load(Constants.AVATARS.get(CurrentUser.getCurrentuser().getUserAvatarId()))
                     .into(viewHolder.mAvatarImageView);
             viewHolder.mMsgTextView.setText(mTripMessages.get(position).getMessage());
-            viewHolder.mMsgSentTextView.setText(mTripMessages.get(position).getSentTime());
+            viewHolder.mMsgSentTextView.setText(mContext.getString(R.string.str_you, mTripMessages.get(position).getSentTime()));
         }
         else {
             ChatOtherViewHolder viewHolder = (ChatOtherViewHolder) holder;
@@ -66,7 +66,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .load(Constants.AVATARS.get(mTripMessages.get(position).getUserAvatarId()))
                     .into(viewHolder.mAvatarImageView);
             viewHolder.mMsgTextView.setText(mTripMessages.get(position).getMessage());
-            viewHolder.mMsgSentTextView.setText(mTripMessages.get(position).getSentTime());
+            viewHolder.mMsgSentTextView.setText(mContext.getString(R.string.str_other_sent, mTripMessages.get(position).getUserName(),
+                    mTripMessages.get(position).getSentTime()));
         }
     }
 
