@@ -230,6 +230,8 @@ public class TripsFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        mTrips.clear();
+        mTripsAdapter.notifyDataSetChanged();
         mTripsReference.removeEventListener(mTripsEventListener);
     }
 }
