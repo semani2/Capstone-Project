@@ -1,6 +1,8 @@
 package sai.developement.travelogue.eventhandlers;
 
+import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -10,8 +12,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import sai.developement.travelogue.CurrentUser;
+import sai.developement.travelogue.R;
 import sai.developement.travelogue.activities.TravelogueActivity;
 import sai.developement.travelogue.events.AuthStateChangeEvent;
+import sai.developement.travelogue.events.ConnectivityStateChangeEvent;
 import sai.developement.travelogue.events.LogoutEvent;
 import sai.developement.travelogue.events.SelectAvatarEvent;
 import sai.developement.travelogue.events.ShowMessageEvent;
@@ -29,6 +33,8 @@ public abstract class AbstractEventHandler implements IEventHandler {
     protected final TravelogueActivity mActivity;
 
     private static final String USER_AVATAR_DIALOG = "user_avatar_dialog";
+
+    private boolean mErrorDialogShown = false;
 
 
     public AbstractEventHandler(TravelogueActivity travelogueActivity) {
@@ -82,5 +88,26 @@ public abstract class AbstractEventHandler implements IEventHandler {
     @Override
     public void onEventMainThread(ShowMessageEvent event) {
         Toast.makeText(mActivity, event.message, Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Override
+    public void onEventMainThread(ConnectivityStateChangeEvent event) {
+        if(!event.mIsConnected && !mErrorDialogShown) {
+            new AlertDialog.Builder(mActivity)
+                    .setTitle(mActivity.getString(R.string.str_connectivity_lost))
+                    .setMessage(mActivity.getString(R.string.str_connectivity_lost_message))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            mErrorDialogShown = true;
+        }
+        else {
+            mErrorDialogShown = false;
+        }
     }
 }

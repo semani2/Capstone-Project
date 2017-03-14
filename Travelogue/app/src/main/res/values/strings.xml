@@ -56,4 +56,9 @@
     <string name="str_itinerary_suggestions">Places you may like to visit&#8230;</string>
     <string name="str_error_fetching_suggestions">No suggestions found for %1$s. \nPlease select a valid city or country.</string>
     <string name="str_select_valid_city">Please select a country or city.</string>
+
+    <!-- Network Change strings -->
+    <string name="str_connectivity_lost">Network lost</string>
+    <string name="str_connectivity_lost_message">Oops! Looks like you are not connected to the internet. Some of the app\'s functionality will be unavailable when you are offline.</string>
+    <string name="str_ok">Ok</string>
 </resources>
