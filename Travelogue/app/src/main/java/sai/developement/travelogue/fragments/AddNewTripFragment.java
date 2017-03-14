@@ -3,6 +3,8 @@ package sai.developement.travelogue.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,6 +60,7 @@ import sai.developement.travelogue.helpers.GenerateGUIDHelper;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.TripDay;
 import sai.developement.travelogue.models.User;
+import sai.developement.travelogue.widget.TravelogueWidgetProvider;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -281,6 +284,7 @@ public class AddNewTripFragment extends Fragment {
                         addTripDays(trip);
                         Logger.d("New trip created successfully : " +trip.getId());
                         toggleProgressBar(false);
+                        updateWidget();
                         Toast.makeText(getContext(), getString(R.string.str_new_trip_created, trip.getName()), Toast.LENGTH_LONG).show();
                         goToViewActivity(trip);
                     }
@@ -296,6 +300,19 @@ public class AddNewTripFragment extends Fragment {
         else {
             // Set error tet messages
         }
+    }
+
+    private void updateWidget() {
+        ComponentName name = new ComponentName(getActivity(), TravelogueWidgetProvider.class);
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(getActivity());
+        int[] ids = widgetManager.getAppWidgetIds(name);
+        Intent intent = new Intent(getActivity(), TravelogueWidgetProvider.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        intent.putExtra(AppWidgetManager.ACTION_APPWIDGET_UPDATE, ids);
+
+        widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widget_list_view);
+
+        getActivity().sendBroadcast(intent);
     }
 
     private void addTripDays(Trip trip) {

@@ -1,0 +1,9 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="200dp"
+    android:minHeight="180dp"
+    android:previewImage="@drawable/travelogue_icon"
+    android:initialLayout="@layout/travelogue_widget_layout"
+    android:widgetCategory="home_screen"
+    android:updatePeriodMillis="0"
+    android:resizeMode="vertical">
+</appwidget-provider>
