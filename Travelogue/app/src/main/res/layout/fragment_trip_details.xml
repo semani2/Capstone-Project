@@ -123,7 +123,8 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="5dp"
                 android:weightSum="1"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:id="@+id/add_user_text_layout">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"

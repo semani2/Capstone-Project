@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,8 +30,11 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.TravelogueActivity;
 import sai.developement.travelogue.adapters.ItineraryRecyclerAdapter;
 import sai.developement.travelogue.callbacks.ItineraryCallback;
+import sai.developement.travelogue.eventhandlers.fragments.DayFragmentEventHandler;
+import sai.developement.travelogue.eventhandlers.fragments.IFragmentEventHandler;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.analytics.FirebaseItineraryAnalyticsHelper;
 import sai.developement.travelogue.models.TripDay;
@@ -83,6 +87,8 @@ public class DayFragment extends Fragment implements ItineraryCallback{
 
     private ItineraryRecyclerAdapter mItineraryRecyclerAdapter;
 
+    private IFragmentEventHandler mEventHandler;
+
     public DayFragment() {
         // Required empty public constructor
     }
@@ -104,6 +110,8 @@ public class DayFragment extends Fragment implements ItineraryCallback{
         mTripDay = getArguments().getInt(DAY_KEY);
         mTripDate = getArguments().getString(DATE_KEY);
         mTripId = getArguments().getString(TRIP_ID_KEY);
+
+        mEventHandler = new DayFragmentEventHandler(this);
     }
 
     @Override
@@ -118,9 +126,15 @@ public class DayFragment extends Fragment implements ItineraryCallback{
 
         initItiRecyclerView();
 
+        itineraryAddFab.setVisibility(((TravelogueActivity)getActivity()).isConnected() ? View.VISIBLE : View.GONE);
+
         itineraryAddFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!((TravelogueActivity)getActivity()).isConnected()) {
+                    Toast.makeText(getContext(), getString(R.string.str_connectivity_lost_message), Toast.LENGTH_LONG).show();
+                    return;
+                }
                 AddItineraryDialogFragment addItineraryDialogFragment = AddItineraryDialogFragment.newInstance();
                 addItineraryDialogFragment.setTargetFragment(DayFragment.this, 0);
 
@@ -137,6 +151,7 @@ public class DayFragment extends Fragment implements ItineraryCallback{
     @Override
     public void onStop() {
         super.onStop();
+        mEventHandler.onStop();
         if(mTripDayDatabaseReference != null) {
             mTripDayDatabaseReference.removeEventListener(mTripVisitsChildEventListener);
         }
@@ -145,6 +160,7 @@ public class DayFragment extends Fragment implements ItineraryCallback{
     @Override
     public void onStart() {
         super.onStart();
+        mEventHandler.onStart();
         mTripVisitList.clear();
         mItineraryRecyclerAdapter.notifyDataSetChanged();
         loadItinerary();
@@ -277,5 +293,9 @@ public class DayFragment extends Fragment implements ItineraryCallback{
     public void onItinerarySelected(TripVisit tripVisit) {
         FirebaseDatabaseHelper.addTripVisitToDay(tripDay.getId(), tripVisit);
         FirebaseItineraryAnalyticsHelper.logItineraryAddedEvent(tripDay.getId());
+    }
+
+    public void toggleBehavior(boolean isConnected) {
+        itineraryAddFab.setVisibility(isConnected ? View.VISIBLE : View.GONE);
     }
 }

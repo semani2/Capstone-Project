@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,8 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.HomePagesAdapter;
-import sai.developement.travelogue.eventhandlers.HomeEventHandler;
-import sai.developement.travelogue.eventhandlers.IEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.HomeEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.IEventHandler;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.models.User;
 
@@ -59,6 +60,10 @@ public class HomeActivity extends TravelogueActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!isConnected()) {
+                    Toast.makeText(HomeActivity.this, getString(R.string.str_connectivity_lost_message), Toast.LENGTH_LONG).show();
+                    return;
+                }
                  // Launch New Trip activity to create a new trip
                 Intent newTripIntent = new Intent(HomeActivity.this, NewTripActivity.class);
                 startActivity(newTripIntent);
@@ -66,6 +71,12 @@ public class HomeActivity extends TravelogueActivity {
         });
 
         setSupportActionBar(mToolbar);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setVisibility(isConnected() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -91,5 +102,9 @@ public class HomeActivity extends TravelogueActivity {
 
             mTabLayout.setupWithViewPager(mViewPager);
         }
+    }
+
+    public void toggleFAB(boolean shouldShow) {
+        fab.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
     }
 }

@@ -9,8 +9,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
-import sai.developement.travelogue.eventhandlers.IEventHandler;
-import sai.developement.travelogue.eventhandlers.NewTripEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.IEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.NewTripEventHandler;
 import sai.developement.travelogue.fragments.AddNewTripFragment;
 
 public class NewTripActivity extends TravelogueActivity {

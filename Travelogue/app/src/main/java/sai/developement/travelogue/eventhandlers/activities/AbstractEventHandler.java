@@ -1,4 +1,4 @@
-package sai.developement.travelogue.eventhandlers;
+package sai.developement.travelogue.eventhandlers.activities;
 
 import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;

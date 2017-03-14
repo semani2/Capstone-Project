@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -52,9 +53,12 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.TravelogueActivity;
 import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.adapters.TripMatesListAdapter;
 import sai.developement.travelogue.asynctasks.LoadPlaceImageTask;
+import sai.developement.travelogue.eventhandlers.fragments.AddNewTripFragmentEventHandler;
+import sai.developement.travelogue.eventhandlers.fragments.IFragmentEventHandler;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.GenerateGUIDHelper;
 import sai.developement.travelogue.helpers.analytics.FirebaseTripAnalyticsHelper;
@@ -115,6 +119,8 @@ public class AddNewTripFragment extends Fragment {
 
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("dd MMM yyyy", Locale.US);
 
+    private IFragmentEventHandler mEventHandler;
+
     private static final String TRIP_NAME_KEY = "trip_name";
     private static final String TRIP_START_DATE_KEY = "trip_start_date";
     private static final String TRIP_END_DATE_KEY = "trip_end_date";
@@ -127,11 +133,19 @@ public class AddNewTripFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        mEventHandler.onStart();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        mEventHandler.onStop();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mEventHandler = new AddNewTripFragmentEventHandler(this);
     }
 
     @Override
@@ -216,6 +230,10 @@ public class AddNewTripFragment extends Fragment {
                 saveTrip();
             }
         });
+
+        boolean isConnected = ((TravelogueActivity) getActivity()).isConnected();
+        addUserButton.setEnabled(isConnected);
+        saveTripButton.setEnabled(isConnected);
 
         return view;
     }
@@ -517,6 +535,11 @@ public class AddNewTripFragment extends Fragment {
 
     private void toggleProgressBar(boolean isBusy) {
         progressBarLayout.setVisibility(isBusy ? View.VISIBLE : View.GONE);
+    }
+
+    public void toggleBehavior(boolean isConnected) {
+        addUserButton.setEnabled(isConnected);
+        saveTripButton.setEnabled(isConnected);
     }
 
 }

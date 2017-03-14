@@ -9,8 +9,8 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 
 import sai.developement.travelogue.R;
-import sai.developement.travelogue.eventhandlers.ChatEventHandler;
-import sai.developement.travelogue.eventhandlers.IEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.ChatEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.IEventHandler;
 import sai.developement.travelogue.fragments.ChatFragment;
 import sai.developement.travelogue.models.Trip;
 

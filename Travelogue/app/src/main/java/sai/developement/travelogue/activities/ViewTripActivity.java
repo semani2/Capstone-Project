@@ -26,8 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.adapters.TripPagesAdapter;
-import sai.developement.travelogue.eventhandlers.IEventHandler;
-import sai.developement.travelogue.eventhandlers.ViewTripEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.IEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.ViewTripEventHandler;
 import sai.developement.travelogue.helpers.PlaceHolderImageHelper;
 import sai.developement.travelogue.models.Trip;
 

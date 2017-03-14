@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -32,8 +33,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sai.developement.travelogue.CurrentUser;
 import sai.developement.travelogue.R;
+import sai.developement.travelogue.activities.TravelogueActivity;
 import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.adapters.TripMatesListAdapter;
+import sai.developement.travelogue.eventhandlers.fragments.IFragmentEventHandler;
+import sai.developement.travelogue.eventhandlers.fragments.TripDetailsFragmentEventHandler;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.analytics.FirebaseTravelMateAnalyticsHelper;
 import sai.developement.travelogue.models.Trip;
@@ -76,11 +80,16 @@ public class TripDetailsFragment extends Fragment {
     @BindView(R.id.details_fragment_scroll_view)
     ScrollView mainScrollView;
 
+    @BindView(R.id.add_user_text_layout)
+    LinearLayout addUserTextLayout;
+
     private Trip mTrip;
 
     private TripMatesListAdapter mTripMatesListAdapter;
 
     private ArrayList<User> mTripMates = new ArrayList<>();
+
+    private IFragmentEventHandler mEventHandler;
 
     public TripDetailsFragment() {
         // Required empty public constructor
@@ -93,6 +102,8 @@ public class TripDetailsFragment extends Fragment {
         if(getArguments() != null && getArguments().getParcelable(ViewTripActivity.TRIP_KEY) != null) {
             mTrip = getArguments().getParcelable(ViewTripActivity.TRIP_KEY);
         }
+
+        mEventHandler = new TripDetailsFragmentEventHandler(this);
     }
 
     @Override
@@ -103,6 +114,8 @@ public class TripDetailsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         addUserButton.setEnabled(false);
+
+        addUserTextLayout.setVisibility(((TravelogueActivity)getActivity()).isConnected() ? View.VISIBLE : View.GONE);
 
         if(mTrip != null) {
             tripNameTextView.setText(mTrip.getName());
@@ -149,6 +162,11 @@ public class TripDetailsFragment extends Fragment {
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!((TravelogueActivity)getActivity()).isConnected()) {
+                    Toast.makeText(getContext(), getString(R.string.str_connectivity_lost_message), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 progressBarLayout.setVisibility(View.VISIBLE);
                 final String input = emailEditText.getText().toString().trim();
                 if(validateEmail(input)) {
@@ -266,5 +284,16 @@ public class TripDetailsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         mainScrollView.requestFocus();
+        mEventHandler.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mEventHandler.onStop();
+    }
+
+    public void toggleBehavior(boolean isConnected) {
+        addUserTextLayout.setVisibility(isConnected ? View.VISIBLE : View.GONE);
     }
 }

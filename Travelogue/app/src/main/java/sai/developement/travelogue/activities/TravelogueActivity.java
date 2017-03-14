@@ -1,6 +1,9 @@
 package sai.developement.travelogue.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +20,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.Arrays;
 
 import sai.developement.travelogue.R;
-import sai.developement.travelogue.eventhandlers.IEventHandler;
+import sai.developement.travelogue.eventhandlers.activities.IEventHandler;
 import sai.developement.travelogue.events.LogoutEvent;
 
 /**
@@ -129,4 +132,13 @@ public abstract class TravelogueActivity extends AppCompatActivity {
     }
 
     protected abstract IEventHandler createEventHandler();
+
+    public boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
 }
