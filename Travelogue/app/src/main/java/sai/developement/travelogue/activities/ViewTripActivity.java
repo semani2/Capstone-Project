@@ -63,15 +63,15 @@ public class ViewTripActivity extends TravelogueActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_view_trip);
         ButterKnife.bind(this);
+        super.onCreate(savedInstanceState);
 
         if(getIntent().getExtras() == null || getIntent().getExtras().getParcelable(TRIP_KEY) == null) {
             // No trip object
             goHome();
+            return;
         }
 
         setSupportActionBar(mToolbar);
-
-        super.onCreate(savedInstanceState);
 
         mTrip = getIntent().getExtras().getParcelable(TRIP_KEY);
 

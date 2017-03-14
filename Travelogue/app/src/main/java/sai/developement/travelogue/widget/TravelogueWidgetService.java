@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -115,6 +116,14 @@ public class TravelogueWidgetService extends RemoteViewsService {
                 return null;
             }
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_list_item);
+
+            Bundle extras = new Bundle();
+            extras.putParcelable(TravelogueWidgetProvider.TRIP_ITEM, mTripsList.get(position));
+
+            Intent fillInIntent = new Intent();
+            fillInIntent.putExtras(extras);
+            views.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
+
             String tripName = mTripsList.get(position).getName();
             String tripDate = mTripsList.get(position).getStartDate() + " - " + mTripsList.get(position).getEndDate();
 
