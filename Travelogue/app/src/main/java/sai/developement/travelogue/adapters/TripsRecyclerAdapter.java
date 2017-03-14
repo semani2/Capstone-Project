@@ -2,10 +2,8 @@ package sai.developement.travelogue.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 
 import sai.developement.travelogue.R;
 import sai.developement.travelogue.activities.HomeActivity;
-import sai.developement.travelogue.activities.ViewTripActivity;
 import sai.developement.travelogue.helpers.PlaceHolderImageHelper;
 import sai.developement.travelogue.models.Trip;
 
@@ -93,19 +90,6 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.mTripImageView);
         }
-
-        holder.mTripLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle extras = new Bundle();
-                extras.putParcelable(ViewTripActivity.TRIP_KEY, mTripsLit.get(position));
-
-                Intent intent = new Intent(mActivity, ViewTripActivity.class);
-                intent.putExtras(extras);
-
-                mActivity.startActivity(intent);
-            }
-        });
     }
 
     @Override

@@ -51,6 +51,9 @@
     <!-- Home Activity Strings -->
     <string name="str_my_trips">My Trips</string>
     <string name="str_shared_trips">Shared Trips</string>
+    <string name="str_delete_trip">Are you sure you want to delete %1$s trip?</string>
+    <string name="str_yes">Yes</string>
+    <string name="str_no">No</string>
 
     <!-- Itinerary PLanner strings -->
     <string name="str_itinerary_suggestions">Places you may like to visit&#8230;</string>
