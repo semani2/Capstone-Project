@@ -44,8 +44,12 @@ public class CurrentUser {
         return sCurrentuser;
     }
 
-    public static void deleteCurrentUser() {
+    public static void deleteCurrentUser(Context context) {
         sCurrentuser = null;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USER_ID_KEY, null);
+        editor.apply();
     }
 
     public String getUserId() {

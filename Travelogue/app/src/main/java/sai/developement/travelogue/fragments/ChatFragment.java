@@ -32,6 +32,7 @@ import sai.developement.travelogue.R;
 import sai.developement.travelogue.activities.ChatActivity;
 import sai.developement.travelogue.adapters.ChatAdapter;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
+import sai.developement.travelogue.helpers.analytics.FirebaseChatAnalyticsHelper;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.TripMessage;
 
@@ -150,6 +151,7 @@ public class ChatFragment extends Fragment {
             }
         };
 
+        FirebaseChatAnalyticsHelper.logChatOpenedEvent(mTrip.getId());
         return view;
     }
 
@@ -162,6 +164,7 @@ public class ChatFragment extends Fragment {
         tripMessage.setMessage(chatMessageEditText.getText().toString().trim());
 
         mTripChatReference.push().setValue(tripMessage);
+        FirebaseChatAnalyticsHelper.logChatsgSentEvent(mTrip.getId());
     }
 
     @Override

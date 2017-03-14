@@ -16,6 +16,7 @@ import sai.developement.travelogue.events.LogoutEvent;
 import sai.developement.travelogue.events.SelectAvatarEvent;
 import sai.developement.travelogue.events.ShowMessageEvent;
 import sai.developement.travelogue.fragments.UserAvatarDialogFragment;
+import sai.developement.travelogue.helpers.analytics.FirebaseUserAnalyticsHelper;
 
 /**
  * Created by sai on 3/9/17.
@@ -72,7 +73,8 @@ public abstract class AbstractEventHandler implements IEventHandler {
     @Subscribe(threadMode = ThreadMode.MAIN)
     @Override
     public void onEventMainThread(LogoutEvent event) {
-        CurrentUser.deleteCurrentUser();
+        FirebaseUserAnalyticsHelper.logLogoutEvent();
+        CurrentUser.deleteCurrentUser(mActivity);
         AuthUI.getInstance().signOut(mActivity);
     }
 

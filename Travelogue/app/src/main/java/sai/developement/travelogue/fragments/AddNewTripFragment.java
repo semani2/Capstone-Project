@@ -57,6 +57,7 @@ import sai.developement.travelogue.adapters.TripMatesListAdapter;
 import sai.developement.travelogue.asynctasks.LoadPlaceImageTask;
 import sai.developement.travelogue.helpers.FirebaseDatabaseHelper;
 import sai.developement.travelogue.helpers.GenerateGUIDHelper;
+import sai.developement.travelogue.helpers.analytics.FirebaseTripAnalyticsHelper;
 import sai.developement.travelogue.models.Trip;
 import sai.developement.travelogue.models.TripDay;
 import sai.developement.travelogue.models.User;
@@ -285,6 +286,7 @@ public class AddNewTripFragment extends Fragment {
                         Logger.d("New trip created successfully : " +trip.getId());
                         toggleProgressBar(false);
                         updateWidget();
+                        logAnalyticsEvent(trip.getId());
                         Toast.makeText(getContext(), getString(R.string.str_new_trip_created, trip.getName()), Toast.LENGTH_LONG).show();
                         goToViewActivity(trip);
                     }
@@ -300,6 +302,10 @@ public class AddNewTripFragment extends Fragment {
         else {
             // Set error tet messages
         }
+    }
+
+    private void logAnalyticsEvent(String tripId) {
+        FirebaseTripAnalyticsHelper.logTripAddedEvent(tripId);
     }
 
     private void updateWidget() {
