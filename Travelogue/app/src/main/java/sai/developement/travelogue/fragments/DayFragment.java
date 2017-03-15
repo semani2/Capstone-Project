@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -141,8 +142,9 @@ public class DayFragment extends Fragment implements ItineraryCallback{
                 AddItineraryDialogFragment addItineraryDialogFragment = AddItineraryDialogFragment.newInstance();
                 addItineraryDialogFragment.setTargetFragment(DayFragment.this, 0);
 
-                addItineraryDialogFragment.show(getActivity().getSupportFragmentManager(),
-                        ADD_ITI_FRAGMENT);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.add(addItineraryDialogFragment, ADD_ITI_FRAGMENT);
+                transaction.commitAllowingStateLoss();
             }
         });
 
