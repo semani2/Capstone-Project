@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import sai.developement.travelogue.Constants;
+import java.util.List;
+
 import sai.developement.travelogue.R;
 
 /**
@@ -16,14 +17,16 @@ import sai.developement.travelogue.R;
 
 public class AvatarAdapter extends BaseAdapter {
     private final Context mContext;
+    private final List<Integer> mAvatarsList;
 
-    public AvatarAdapter(Context context) {
+    public AvatarAdapter(Context context, List<Integer> avatarsList) {
         this.mContext = context;
+        this.mAvatarsList = avatarsList;
     }
 
     @Override
     public int getCount() {
-        return Constants.AVATARS.size();
+        return mAvatarsList.size();
     }
 
     @Override
@@ -54,7 +57,7 @@ public class AvatarAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.avatarImageView.setImageResource(Constants.AVATARS.get(position + 1));
+        viewHolder.avatarImageView.setImageResource(mAvatarsList.get(position + 1));
         return view;
     }
 

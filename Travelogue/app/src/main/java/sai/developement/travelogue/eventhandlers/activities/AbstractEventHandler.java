@@ -82,7 +82,6 @@ public abstract class AbstractEventHandler implements IEventHandler {
         FirebaseUserAnalyticsHelper.logLogoutEvent();
         CurrentUser.deleteCurrentUser(mActivity);
         AuthUI.getInstance().signOut(mActivity);
-        mActivity.finish();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
