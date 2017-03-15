@@ -46,7 +46,9 @@
                 android:textColorHint="@color/text_secondary"
                 android:textColor="@color/text_secondary"
                 android:focusable="false"
-                android:enabled="false"/>
+                android:enabled="false"
+                android:nextFocusForward="@id/from_time_edit_text"
+                android:nextFocusDown="@id/from_time_edit_text"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -59,7 +61,9 @@
                 android:textColorHint="@color/text_secondary"
                 android:textColor="@color/text_secondary"
                 android:focusable="false"
-                android:enabled="false"/>
+                android:enabled="false"
+                android:nextFocusForward="@id/add_itinerary_button"
+                android:nextFocusUp="@id/place_edit_text"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,7 +80,8 @@
                     android:textColor="@color/colorPrimary"
                     android:padding="10dp"
                     android:textSize="16sp"
-                    android:textAllCaps="true"/>
+                    android:textAllCaps="true"
+                    android:nextFocusRight="@id/clear_itinerary_button"/>
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -15,7 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:id="@+id/trip_image_view"
-            android:transitionName="@string/str_transition_trip_image"/>
+            android:transitionName="@string/str_transition_trip_image"
+            android:contentDescription="@string/str_trip_image"/>
 
         <LinearLayout
             android:layout_width="match_parent"
