@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -173,8 +176,16 @@ public class TripsFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), ViewTripActivity.class);
                         intent.putExtras(extras);
 
-                        getActivity().startActivity(intent);
-
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(),
+                                new Pair<View, String>(view.findViewById(R.id.trip_name_text_view),
+                                        getString(R.string.str_transition_trip_name)),
+                                new Pair<View, String>(view.findViewById(R.id.trip_loc_text_view),
+                                        getString(R.string.str_transition_trip_loc)),
+                                new Pair<View, String>(view.findViewById(R.id.trip_image_view),
+                                        getString(R.string.str_transition_trip_image))
+                        );
+                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
