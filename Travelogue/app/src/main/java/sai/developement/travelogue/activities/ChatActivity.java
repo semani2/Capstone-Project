@@ -64,6 +64,7 @@ public class ChatActivity extends TravelogueActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
                 break;
         }
         return true;

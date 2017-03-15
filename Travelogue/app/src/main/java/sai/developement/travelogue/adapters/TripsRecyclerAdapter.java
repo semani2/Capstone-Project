@@ -59,6 +59,7 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
                 + mTripsLit.get(position).getEndDate());
         holder.mTripCreatorTextView.setText(mTripsLit.get(position).getCreatedByUsername());
         holder.mTripCreatorTextView.setVisibility(mTripFlag == HomeActivity.SHARED_TRIPS_FLAG ? View.VISIBLE : View.GONE);
+        holder.mTripLocTextView.setText(mTripsLit.get(position).getPrimaryLocation());
 
         if(mTripsLit.get(position).getPhotoUrl() != null) {
             Glide.with(mContext)
@@ -105,6 +106,7 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
         public CardView mTripLayout;
         public LinearLayout mTripTextLayout;
         public ImageView mTripImageView;
+        public TextView mTripLocTextView;
 
         public TripViewHolder(View v) {
             super(v);
@@ -114,6 +116,7 @@ public class TripsRecyclerAdapter extends RecyclerView.Adapter<TripsRecyclerAdap
             mTripLayout = (CardView) v.findViewById(R.id.trip_layout);
             mTripTextLayout = (LinearLayout) v.findViewById(R.id.trip_text_layout);
             mTripImageView = (ImageView) v.findViewById(R.id.trip_image_view);
+            mTripLocTextView = (TextView) v.findViewById(R.id.trip_loc_text_view);
         }
     }
 }

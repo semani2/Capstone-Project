@@ -145,7 +145,10 @@ public class ViewTripActivity extends TravelogueActivity {
         extras.putParcelable(ChatActivity.TRIP_KEY, mTrip);
 
         chatIntent.putExtras(extras);
+        chatIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
         startActivity(chatIntent);
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }
 
     private void changeToolbarColors(Bitmap bitmap) {

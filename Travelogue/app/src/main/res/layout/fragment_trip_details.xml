@@ -27,7 +27,8 @@
             android:textSize="24sp"
             android:textColor="@color/text_primary"
             android:focusable="true"
-            tools:hint="London Trip">
+            tools:hint="London Trip"
+            android:transitionName="@string/str_transition_trip_name">
         </TextView>
 
         <TextView
@@ -41,7 +42,8 @@
             android:textSize="20sp"
             android:textColor="@color/text_secondary"
             android:focusable="true"
-            tools:hint="London">
+            tools:hint="London"
+            android:transitionName="@string/str_transition_trip_loc">
         </TextView>
 
 

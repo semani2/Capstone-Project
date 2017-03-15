@@ -65,4 +65,9 @@
     <string name="str_connectivity_lost">Network lost</string>
     <string name="str_connectivity_lost_message">Oops! Looks like you are not connected to the internet. Some of the app\'s functionality will be unavailable when you are offline.</string>
     <string name="str_ok">Ok</string>
+
+    <!-- ANimation Strings -->
+    <string name="str_transition_trip_image" translatable="false">transition:trip_image</string>
+    <string name="str_transition_trip_name" translatable="false">transition:trip_name</string>
+    <string name="str_transition_trip_loc" translatable="false">transition:trip_loc</string>
 </resources>
