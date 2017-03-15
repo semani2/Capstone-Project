@@ -75,16 +75,6 @@ public class TripsFragment extends Fragment {
         mUserId = getArguments().getString(HomeActivity.USER_ID_KEY);
 
         mTripsFlag = getArguments().getInt(HomeActivity.TRIP_FLAG);
-        if(mTripsFlag == HomeActivity.MY_TRIPS_FLAG) {
-            mTripsReference = FirebaseDatabaseHelper.getTripsDatabaseReference().
-                    child(mUserId);
-        }
-        else {
-            mTripsReference = FirebaseDatabaseHelper.getSharedTripsReference().
-                    child(mUserId);
-        }
-
-        initEventListener();
         return view;
     }
 
@@ -234,6 +224,16 @@ public class TripsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        if(mTripsFlag == HomeActivity.MY_TRIPS_FLAG) {
+            mTripsReference = FirebaseDatabaseHelper.getTripsDatabaseReference().
+                    child(mUserId);
+        }
+        else {
+            mTripsReference = FirebaseDatabaseHelper.getSharedTripsReference().
+                    child(mUserId);
+        }
+
+        initEventListener();
         mTrips.clear();
         mTripsReference.addChildEventListener(mTripsEventListener);
     }

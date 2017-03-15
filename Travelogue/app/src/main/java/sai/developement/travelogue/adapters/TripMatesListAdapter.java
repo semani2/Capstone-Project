@@ -43,7 +43,7 @@ public class TripMatesListAdapter extends ArrayAdapter<User> {
         TextView userNameTextView = (TextView) convertView.findViewById(R.id.user_name_text_view);
         TextView userEmailTextView = (TextView) convertView.findViewById(R.id.user_email_text_view);
         Glide.with(mContext)
-                .load(Constants.AVATARS.get(user.getAvatarId()))
+                .load(Constants.getAvatars().get(user.getAvatarId()))
                 .into(profileImageView);
         userNameTextView.setText(user.getName());
         userEmailTextView.setText(user.getEmail());
