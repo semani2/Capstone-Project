@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "936779219736-5muoa6a7i5kjhm2f0trmvucodcau29r4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sai.developement.travelogue",
+            "certificate_hash": "a1e46e96eff9e21ffdb4a02330c29dd6d6d3a6d8"
+          }
+        },
+        {
           "client_id": "936779219736-vlkfs3vpgskc5c9qbjnj2f0m8ihbt10h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -39,6 +47,13 @@
         "appinvite_service": {
           "status": 2,
           "other_platform_oauth_client": [
+            {
+              "client_id": "936779219736-chjpupqthn0280k54fvgl3pqu8d50qnt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "travelogue.development.ios"
+              }
+            },
             {
               "client_id": "936779219736-mu159neb82ba8qd70ndosrpc4k4spqlh.apps.googleusercontent.com",
               "client_type": 3

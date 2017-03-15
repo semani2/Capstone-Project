@@ -47,10 +47,9 @@ public class ItineraryRecyclerAdapter extends RecyclerView.Adapter<ItineraryRecy
 
     @Override
     public void onBindViewHolder(final ItineraryViewHolder holder, int position) {
-        holder.mItiPlaceTextView.setText(mTripVisits.get(position).getPlace());
-        holder.mItiLocationTextView.setText(mTripVisits.get(position).getLocation());
+        holder.mItiPlaceTextView.setText(mTripVisits.get(position).getPlace() +", " + mTripVisits.get(position).getLocation());
         if(mTripVisits.get(position).getTripTime() != null) {
-            holder.mItiTimeTextView.setText(mTripVisits.get(position).getTripTime());
+            holder.mItiTimeTextView.setText(mContext.getString(R.string.str_visit_time, mTripVisits.get(position).getTripTime()));
         }
 
         if(mTripVisits.get(position).getImageUrl() != null) {
@@ -93,7 +92,6 @@ public class ItineraryRecyclerAdapter extends RecyclerView.Adapter<ItineraryRecy
     public static class ItineraryViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView mItiPlaceTextView;
-        public TextView mItiLocationTextView;
         public TextView mItiTimeTextView;
         public ImageView mItiImageView;
         public LinearLayout mItiTextLayout;
@@ -101,7 +99,6 @@ public class ItineraryRecyclerAdapter extends RecyclerView.Adapter<ItineraryRecy
         public ItineraryViewHolder(View v) {
             super(v);
             mItiPlaceTextView = (TextView) v.findViewById(R.id.iti_place_text_view);
-            mItiLocationTextView = (TextView) v.findViewById(R.id.iti_location_text_view);
             mItiTimeTextView = (TextView) v.findViewById(R.id.iti_time_text_view);
             mItiImageView = (ImageView) v.findViewById(R.id.iti_image_view);
             mItiTextLayout = (LinearLayout) v.findViewById(R.id.suggestion_text_layout);

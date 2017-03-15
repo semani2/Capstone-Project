@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -163,6 +164,7 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
         tripPlaceEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideSoftkeyboard(view);
                 getActivity().getSupportLoaderManager().destroyLoader(SUGGESTIONS_LOADER);
                 getActivity().getSupportLoaderManager().initLoader(SUGGESTIONS_LOADER, null, AddItineraryDialogFragment.this).forceLoad();
             }
@@ -202,6 +204,11 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
             mSuggestionsAdapter.notifyDataSetChanged();
         }
         return v;
+    }
+
+    private void hideSoftkeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

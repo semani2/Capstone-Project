@@ -24,7 +24,7 @@
 
     <string name="str_day">Day - %1$s</string>
 
-    <string name="str_no_trips">Sorry! No trips for you...</string>
+    <string name="str_no_trips">Oops! We did not find any trips for you.</string>
 
     <!-- Day Fragment Strings -->
     <string name="str_no_plans_yet">Looks like you have not yet planned anything for today!\n\n Start adding places you want to visit!</string>
@@ -61,6 +61,7 @@
     <string name="str_select_valid_city">Please select a country or city.</string>
     <string name="str_delete_itinerary">Are you sure you want to cancel your visit to %1$s?</string>
     <string name="str_plan_a_visit">Plan a visit</string>
+    <string name="str_visit_time">You plan to visit at %1$s</string>
 
     <!-- Network Change strings -->
     <string name="str_connectivity_lost">Network lost</string>
