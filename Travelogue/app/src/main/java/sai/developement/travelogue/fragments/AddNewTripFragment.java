@@ -158,7 +158,7 @@ public class AddNewTripFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mPlaceAutocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager()
-                .findFragmentById(R.id.place_autocomplete_fragment);
+                .findFragmentById(R.id.place_autocomplete_fragment_new_trip);
 
         mPlaceAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override

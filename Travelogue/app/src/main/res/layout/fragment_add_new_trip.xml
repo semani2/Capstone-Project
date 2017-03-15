@@ -36,9 +36,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/trip_name_text_edit_text"
                 android:freezesText="true"
-                android:hint="@string/str_trip_name"
-                android:nextFocusDown="@id/place_autocomplete_fragment"
-                android:nextFocusForward="@id/place_autocomplete_fragment"/>
+                android:hint="@string/str_trip_name" />
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -55,7 +53,7 @@
             android:layout_height="wrap_content"
             android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             android:layout_marginTop="5dp"
-            android:id="@+id/place_autocomplete_fragment"
+            android:id="@+id/place_autocomplete_fragment_new_trip"
             android:layout_below="@id/place_title_text_view" />
 
         <LinearLayout
@@ -63,7 +61,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/date_picker_layout"
             android:orientation="horizontal"
-            android:layout_below="@id/place_autocomplete_fragment"
+            android:layout_below="@id/place_autocomplete_fragment_new_trip"
             android:weightSum="1"
             android:layout_marginTop="10dp">
 
@@ -121,8 +119,7 @@
                     android:id="@+id/user_emaiL_edit_text"
                     android:hint="@string/str_add_users_hint"
                     android:textSize="16sp"
-                    android:inputType="textEmailAddress"
-                    android:nextFocusRight="@id/add_user_button"/>
+                    android:inputType="textEmailAddress" />
 
                 <Button
                     android:layout_width="0dp"
@@ -135,7 +132,6 @@
                     android:textSize="16sp"
                     android:id="@+id/add_user_button"
                     android:nextFocusLeft="@id/user_emaiL_edit_text"
-                    android:nextFocusDown="@id/save_trip_button"
                     />
             </LinearLayout>
 

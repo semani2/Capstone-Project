@@ -33,9 +33,7 @@
                 android:hint="@string/str_say_something"
                 android:id="@+id/chat_message_edit_text"
                 android:layout_weight="0.8"
-                android:layout_marginStart="10dp"
-                android:nextFocusForward="@id/chat_message_send_button"
-                android:nextFocusRight="@id/chat_message_send_button"/>
+                android:layout_marginStart="10dp" />
 
 
             <ImageButton

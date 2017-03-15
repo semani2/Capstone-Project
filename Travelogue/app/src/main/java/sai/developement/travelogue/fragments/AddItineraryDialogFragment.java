@@ -9,6 +9,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +25,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -74,6 +72,9 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
     @BindView(R.id.itinerary_dialog_close)
     ImageView closeDialogView;
 
+    @BindView(R.id.location_edit_text)
+    EditText locationEditText;
+
     private ItineraryCallback mCallback = null;
 
     private Suggestion mselectedSuggestion = new Suggestion();
@@ -82,17 +83,14 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
 
     private String mLocation = null;
 
-    PlaceAutocompleteFragment mPlaceAutocompleteFragment;
-
-    private List<Suggestion> mSuggestionsList = new ArrayList<>();
+    private ArrayList<Suggestion> mSuggestionsList = new ArrayList<>();
 
     private SuggestionsAdapter mSuggestionsAdapter;
 
-    public static AddItineraryDialogFragment newInstance() {
-        AddItineraryDialogFragment fragment = new AddItineraryDialogFragment();
-        fragment.setCancelable(false);
+    private static final String SUGGESTION_LIST_KEY = "suggestion_list_key";
 
-        return fragment;
+    public static AddItineraryDialogFragment newInstance() {
+        return new AddItineraryDialogFragment();
     }
 
     @Override
@@ -106,22 +104,6 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.itinerary_planner_dialog, container, false);
         ButterKnife.bind(this, v);
-
-        mPlaceAutocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager()
-                .findFragmentById(R.id.place_autocomplete_fragment);
-
-        mPlaceAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Logger.d(place.getName());
-                setLocation(place.getName().toString());
-            }
-
-            @Override
-            public void onError(Status status) {
-                Logger.e(status.getStatusMessage());
-            }
-        });
 
         tripPlaceEditText.setEnabled(false);
 
@@ -148,7 +130,7 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
                 if(mCallback != null) {
                     Logger.d("Passing trip visit back to Day Fragment");
                     mCallback.onItinerarySelected(tripVisit);
-                    dismiss();
+                    dismissAllowingStateLoss();
                 }
 
             }
@@ -181,7 +163,6 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
         tripPlaceEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 getActivity().getSupportLoaderManager().destroyLoader(SUGGESTIONS_LOADER);
                 getActivity().getSupportLoaderManager().initLoader(SUGGESTIONS_LOADER, null, AddItineraryDialogFragment.this).forceLoad();
             }
@@ -194,18 +175,33 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
             }
         });
 
+        locationEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                setLocation(editable.toString());
+            }
+        });
+
         initSuggestionsRecyclerView();
 
+        if(savedInstanceState != null && savedInstanceState.getParcelableArrayList(SUGGESTION_LIST_KEY) != null) {
+            ArrayList<Suggestion> suggestions = savedInstanceState.getParcelableArrayList(SUGGESTION_LIST_KEY);
+            mSuggestionsList.clear();
+            mSuggestionsList.addAll(suggestions);
+            suggestionsLayout.setVisibility(View.VISIBLE);
+            mSuggestionsAdapter.notifyDataSetChanged();
+        }
         return v;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        getActivity().getFragmentManager()
-                .beginTransaction()
-                .remove(mPlaceAutocompleteFragment)
-                .commit();
     }
 
     @Override
@@ -224,7 +220,6 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
     private void clearSuggestions() {
         suggestionsLayout.setVisibility(View.GONE);
         mSuggestionsList.clear();
-        mSuggestionsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -236,7 +231,7 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
     }
 
     private void clearItiEditor() {
-        mPlaceAutocompleteFragment.setText(null);
+        locationEditText.setText(null);
         tripPlaceEditText.setText(null);
         fromTimeEditText.setText(null);
     }
@@ -281,7 +276,15 @@ public class AddItineraryDialogFragment extends DialogFragment implements Loader
         );
     }
 
-   @Override
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mSuggestionsList.size() > 0) {
+            outState.putParcelableArrayList(SUGGESTION_LIST_KEY, mSuggestionsList);
+        }
+    }
+
+    @Override
     public Loader<List<Suggestion>> onCreateLoader(int id, Bundle args) {
         return new LoadSuggestionTaskLoader(getContext(), mLocation);
     }
