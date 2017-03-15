@@ -2,7 +2,6 @@ package sai.developement.travelogue.eventhandlers.activities;
 
 import sai.developement.travelogue.activities.HomeActivity;
 import sai.developement.travelogue.activities.TravelogueActivity;
-import sai.developement.travelogue.eventhandlers.activities.AbstractEventHandler;
 import sai.developement.travelogue.events.ConnectivityStateChangeEvent;
 
 /**
