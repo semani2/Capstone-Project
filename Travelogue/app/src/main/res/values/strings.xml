@@ -70,4 +70,13 @@
     <string name="str_transition_trip_image" translatable="false">transition:trip_image</string>
     <string name="str_transition_trip_name" translatable="false">transition:trip_name</string>
     <string name="str_transition_trip_loc" translatable="false">transition:trip_loc</string>
+
+    <!-- Accessibility Support -->
+    <string name="str_add_trip_fab">Add a trip</string>
+    <string name="str_travelogue_icon">App icon</string>
+    <string name="str_travelogue_name">App name</string>
+    <string name="str_trip_image">A picture of the trip</string>
+    <string name="str_user_avatar">User\'s avatar</string>
+    <string name="str_chat_message_send">Send message</string>
+    <string name="str_suggestion_item">A picture of a location</string>
 </resources>

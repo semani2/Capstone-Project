@@ -44,7 +44,8 @@
         app:useCompatPadding="true"
         android:elevation="4dp"
         android:layout_margin="16dp"
-        app:rippleColor="@color/colorAccent"/>
+        app:rippleColor="@color/colorAccent"
+        android:contentDescription="@string/str_add_trip_fab"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

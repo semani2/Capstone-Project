@@ -139,7 +139,9 @@
                         android:id="@+id/user_email_edit_text"
                         android:textSize="16sp"
                         android:inputType="textEmailAddress"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:nextFocusForward="@id/add_user_button"
+                        android:nextFocusRight="@id/add_user_button"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
@@ -151,7 +153,8 @@
                     android:textColor="#FFF"
                     android:text="@string/str_add_user"
                     android:textSize="16sp"
-                    android:id="@+id/add_user_button" />
+                    android:id="@+id/add_user_button"
+                    android:nextFocusLeft="@id/user_email_edit_text"/>
             </LinearLayout>
 
             <ListView

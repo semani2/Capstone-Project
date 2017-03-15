@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:id="@+id/trip_photo_image_view"
         android:fitsSystemWindows="true"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/str_trip_image"/>
 
     <View
         android:layout_width="match_parent"

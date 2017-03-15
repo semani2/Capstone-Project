@@ -36,7 +36,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/trip_name_text_edit_text"
                 android:freezesText="true"
-                android:hint="@string/str_trip_name" />
+                android:hint="@string/str_trip_name"
+                android:nextFocusDown="@id/place_autocomplete_fragment"
+                android:nextFocusForward="@id/place_autocomplete_fragment"/>
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -54,7 +56,7 @@
             android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             android:layout_marginTop="5dp"
             android:id="@+id/place_autocomplete_fragment"
-            android:layout_below="@id/place_title_text_view"/>
+            android:layout_below="@id/place_title_text_view" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +75,7 @@
                 android:hint="@string/str_trip_from"
                 android:layout_weight="0.5"
                 android:textSize="16sp"
-                android:focusable="false"/>
+                android:focusable="false" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -119,7 +121,8 @@
                     android:id="@+id/user_emaiL_edit_text"
                     android:hint="@string/str_add_users_hint"
                     android:textSize="16sp"
-                    android:inputType="textEmailAddress"/>
+                    android:inputType="textEmailAddress"
+                    android:nextFocusRight="@id/add_user_button"/>
 
                 <Button
                     android:layout_width="0dp"
@@ -131,6 +134,8 @@
                     android:text="@string/str_add_user"
                     android:textSize="16sp"
                     android:id="@+id/add_user_button"
+                    android:nextFocusLeft="@id/user_emaiL_edit_text"
+                    android:nextFocusDown="@id/save_trip_button"
                     />
             </LinearLayout>
 
@@ -162,7 +167,8 @@
             android:padding="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:nextFocusUp="@id/user_emaiL_edit_text"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

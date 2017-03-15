@@ -29,7 +29,8 @@
                 android:padding="5dp"
                 android:id="@+id/dialog_close_button"
                 android:layout_alignParentEnd="true"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:contentDescription="@string/str_user_avatar"/>
         </RelativeLayout>
 
         <GridView
