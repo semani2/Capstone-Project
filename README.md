@@ -28,3 +28,6 @@ Chat with trip mates to spread the excitment.<br/>
 3. <b>EventBus</b>: Android optimized event bus that simplifies communication between Activities, Fragments, Threads, Services, etc. 
 4. <b>OkHttp</b>: An HTTP+HTTP/2 client for Android and Java applications.
 5. <b>Logger</b>: Simple, pretty and powerful logger for android.
+
+
+Find screenshots here: https://drive.google.com/open?id=0B_xb3VUuqjq4Z2xWaXRhSEQxb0E
